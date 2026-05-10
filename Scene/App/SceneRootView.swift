@@ -32,15 +32,19 @@ extension SceneRootView {
         switch appState.router.currentRoute {
             
         case .onboarding:
+            Text("Onboarding View")
 //            OnboardingView()
             
         case .auth:
+            Text("Auth View")
 //            AuthView()
             
         case .home:
+            Text("Home View")
 //            HomeView()
             
         case .projects:
+            Text("Projects View")
 //            ProjectsView()
             
         default:
@@ -59,6 +63,7 @@ extension SceneRootView {
         switch route {
             
         case .projects:
+            Text("Projects View")
 //            ProjectsView()
             
         case .analysis:
