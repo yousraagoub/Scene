@@ -11,6 +11,7 @@ import SwiftData
 @main
 struct SceneApp: App {
     
+    @StateObject private var settings = AppSettings()
     @StateObject private var appState = AppState()
     
     var sharedModelContainer: ModelContainer = {
@@ -30,7 +31,13 @@ struct SceneApp: App {
         WindowGroup {
             SceneRootView()
                 .environmentObject(appState)
+                .environmentObject(settings)
+                .environment(\.locale, settings.locale)
+                .environment(\.layoutDirection, settings.layoutDirection)
+                .id(settings.language) 
         }
+        .defaultSize(width: 1400, height: 900)
+        .windowResizability(.contentSize)
         .modelContainer(sharedModelContainer)
     }
 }

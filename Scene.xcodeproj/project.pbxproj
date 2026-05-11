@@ -187,11 +187,12 @@
 				};
 			};
 			buildConfigurationList = 91ED4D9A2FAB32D80025B103 /* Build configuration list for PBXProject "Scene" */;
-			developmentRegion = en;
+			developmentRegion = ar;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ar,
 			);
 			mainGroup = 91ED4D962FAB32D80025B103;
 			minimizedProjectReferenceProxies = 1;
@@ -329,6 +330,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -386,6 +388,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
