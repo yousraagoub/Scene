@@ -29,15 +29,19 @@ struct SceneApp: App {
 
     var body: some Scene {
         WindowGroup {
+            
             SceneRootView()
                 .environmentObject(appState)
                 .environmentObject(settings)
                 .environment(\.locale, settings.locale)
                 .environment(\.layoutDirection, settings.layoutDirection)
-                .id(settings.language) 
+                .id(settings.language)
+                .onAppear {
+                    appState.start()
+                }
         }
         .defaultSize(width: 1400, height: 900)
-        .windowResizability(.contentSize)
+        .windowResizability(.automatic)
         .modelContainer(sharedModelContainer)
     }
 }

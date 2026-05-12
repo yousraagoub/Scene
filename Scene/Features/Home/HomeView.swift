@@ -25,7 +25,7 @@ struct HomeView: View {
             DashboardView(cards: homeVM.dashboardCards)
         }
         .navigationTitle("Home")
-        .frame(minWidth: 1200, minHeight: 750)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationSplitViewStyle(.balanced)
         
     }

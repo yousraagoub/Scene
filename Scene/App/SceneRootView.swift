@@ -32,16 +32,13 @@ extension SceneRootView {
         switch appState.router.currentRoute {
             
         case .onboarding:
-            Text("Onboarding View")
-//            OnboardingView()
+            OnboardingView()
             
         case .auth:
-            Text("Auth View")
-//            AuthView()
+            AuthView()
             
         case .home:
-            Text("Home View")
-//            HomeView()
+            HomeView()
             
         case .projects:
             Text("Projects View")

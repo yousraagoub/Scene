@@ -1,8 +1,83 @@
 {
   "sourceLanguage" : "ar",
   "strings" : {
+    "Add Item" : {
+
+    },
+    "admin@scene.app" : {
+
+    },
+    "Analysis View" : {
+
+    },
+    "Arabic" : {
+
+    },
+    "Back" : {
+
+    },
+    "Budget View" : {
+
+    },
+    "Coming Soon" : {
+
+    },
+    "Creative project management for filmmakers." : {
+
+    },
+    "Dashboard" : {
+
+    },
+    "Email" : {
+
+    },
+    "English" : {
+
+    },
+    "Get Started" : {
+
+    },
+    "Highlighted Script View" : {
+
+    },
+    "Home" : {
+
+    },
+    "Item at %@" : {
+
+    },
+    "John Appleseed" : {
+
+    },
     "Key" : {
       "extractionState" : "manual"
+    },
+    "Next" : {
+
+    },
+    "Password" : {
+
+    },
+    "Projects View" : {
+
+    },
+    "Scene" : {
+
+    },
+    "Select an item" : {
+
+    },
+    "Sign In" : {
+
+    },
+    "Sign in to continue using Scene." : {
+
+    },
+    "Welcome Back" : {
+
+    },
+    "سِين" : {
+
     }
   },
   "version" : "1.1"
