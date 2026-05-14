@@ -10,6 +10,10 @@ import SwiftData
 
 @main
 struct SceneApp: App {
+    
+    @StateObject private var settings = AppSettings()
+    @StateObject private var appState = AppState()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -25,8 +29,19 @@ struct SceneApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            
+            SceneRootView()
+                .environmentObject(appState)
+                .environmentObject(settings)
+                .environment(\.locale, settings.locale)
+                .environment(\.layoutDirection, settings.layoutDirection)
+                .id(settings.language)
+                .onAppear {
+                    appState.start()
+                }
         }
+        .defaultSize(width: 1400, height: 900)
+        .windowResizability(.automatic)
         .modelContainer(sharedModelContainer)
     }
 }
