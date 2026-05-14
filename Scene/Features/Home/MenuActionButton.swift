@@ -2,8 +2,6 @@
 //  MenuActionButton.swift
 //  Scene
 //
-//  Created by Yousra Abdelrahman on 24/11/1447 AH.
-//
 import SwiftUI
 struct MenuActionButton: View {
     
@@ -22,7 +20,7 @@ struct MenuActionButton: View {
         case .normal:
             return .primary
         case .destructive:
-            return .red
+            return .primaryRed
         }
     }
     

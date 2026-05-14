@@ -2,8 +2,6 @@
 //  SceneRootView.swift
 //  Scene
 //
-//  Created by Yousra Abdelrahman on 21/11/1447 AH.
-//
 import SwiftUI
 
 struct SceneRootView: View {
@@ -12,13 +10,8 @@ struct SceneRootView: View {
     
     var body: some View {
         
-        NavigationStack(path: $appState.router.path) {
-            
-            rootView
-                .navigationDestination(for: AppRoute.self) { route in
-                    destination(for: route)
-                }
-        }
+        rootView
+            .animation(.easeInOut(duration: 0.2), value: appState.currentRoute)
     }
 }
 
@@ -29,39 +22,25 @@ extension SceneRootView {
     @ViewBuilder
     private var rootView: some View {
         
-        switch appState.router.currentRoute {
+        switch appState.currentRoute {
             
         case .onboarding:
-            OnboardingView()
-            
-        case .auth:
-            AuthView()
+            BackgroundView {
+                OnboardingView()
+            }
             
         case .home:
-            HomeView()
+            BackgroundView{
+                HomeView()
+            }
             
         case .projects:
             Text("Projects View")
-//            ProjectsView()
             
-        default:
-            ContentView()
-        }
-    }
-}
-
-// MARK: - Destinations (Stack Navigation)
-//
-extension SceneRootView {
-
-    @ViewBuilder
-    private func destination(for route: AppRoute) -> some View {
-        
-        switch route {
-            
-        case .projects:
-            Text("Projects View")
-//            ProjectsView()
+        case .createProject:
+            BackgroundView {
+                CreateProjectView()
+            }
             
         case .analysis:
             Text("Analysis View")
@@ -72,8 +51,8 @@ extension SceneRootView {
         case .highlightedScript:
             Text("Highlighted Script View")
             
-        default:
-            EmptyView()
+        case .projectDetails:
+            Text("Project Details")
         }
     }
 }

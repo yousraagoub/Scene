@@ -2,8 +2,6 @@
 //  AppSettings.swift
 //  Scene
 //
-//  Created by Yousra Abdelrahman on 24/11/1447 AH.
-//
 import SwiftUI
 import Combine
 
@@ -20,7 +18,6 @@ final class AppSettings: ObservableObject {
         Locale(identifier: language.code)
     }
 }
-
 
 enum AppLanguage {
     case english

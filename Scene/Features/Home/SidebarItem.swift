@@ -1,8 +1,6 @@
 //
-//  Untitled.swift
+//  SidebarItem.swift
 //  Scene
-//
-//  Created by Yousra Abdelrahman on 24/11/1447 AH.
 //
 import SwiftUI
 

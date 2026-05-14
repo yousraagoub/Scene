@@ -2,10 +2,7 @@
 //  SidebarButton.swift
 //  Scene
 //
-//  Created by Yousra Abdelrahman on 24/11/1447 AH.
-//
 import SwiftUI
-// MARK: - Sidebar Button
 
 struct SidebarButton: View {
     
@@ -25,12 +22,12 @@ struct SidebarButton: View {
                 
                 Spacer()
             }
-            .foregroundStyle(isSelected ? .white : .red)
+            .foregroundStyle(isSelected ? .white : .primaryRed)
             .padding(.vertical, 12)
             .padding(.horizontal, 14)
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(isSelected ? Color.red : Color.clear)
+                    .fill(isSelected ? Color.primaryRed : Color.clear)
             )
         }
         .buttonStyle(.plain)
