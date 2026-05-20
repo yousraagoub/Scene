@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Item {
+final class Itemm {
     var timestamp: Date
     var title: String?// ruam edit
     init(timestamp: Date) {

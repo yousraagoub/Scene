@@ -4,6 +4,8 @@
 //
 import SwiftUI
 import SwiftData
+import OpenAI
+//import OpenAI
 
 @main
 struct SceneApp: App {
@@ -13,7 +15,7 @@ struct SceneApp: App {
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Itemm.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -24,7 +26,10 @@ struct SceneApp: App {
         }
     }()
 
-    var body: some Scene {
+ 
+
+    var body: some SwiftUI.Scene {
+
         WindowGroup {
             
             SceneRootView()
