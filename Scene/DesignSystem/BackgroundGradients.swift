@@ -14,4 +14,5 @@ enum BackgroundGradients {
         startPoint: .top,
         endPoint: .bottom
     )
+    
 }

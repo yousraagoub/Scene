@@ -6,7 +6,7 @@ import Combine
 
 @MainActor
 final class HomeViewModel: ObservableObject {
-    @Published var selectedSection: HomeSection = .home
+    @Published var selectedSection: HomeSection = .createProject
     @Published var isAccountMenuExpanded = false
  
     func signOut() {

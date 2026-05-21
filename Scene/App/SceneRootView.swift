@@ -39,7 +39,8 @@ extension SceneRootView {
             
         case .createProject:
             BackgroundView {
-                CreateProjectView()
+//                CreateProjectView(homeVM: homeVM)
+                Text("Create Project View - Temp")
             }
             
         case .analysis:
