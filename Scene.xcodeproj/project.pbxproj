@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		957884EC2FBD022D00CC5F5D /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 957884EB2FBD022D00CC5F5D /* OpenAI */; };
+		9594975A2FBE186300357094 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 959497592FBE186300357094 /* ZIPFoundation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				957884EC2FBD022D00CC5F5D /* OpenAI in Frameworks */,
+				9594975A2FBE186300357094 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +120,7 @@
 			name = Scene;
 			packageProductDependencies = (
 				957884EB2FBD022D00CC5F5D /* OpenAI */,
+				959497592FBE186300357094 /* ZIPFoundation */,
 			);
 			productName = Scene;
 			productReference = 91ED4D9F2FAB32D80025B103 /* Scene.app */;
@@ -204,6 +207,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				957884EA2FBD022D00CC5F5D /* XCRemoteSwiftPackageReference "OpenAI" */,
+				959497582FBE186300357094 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 91ED4DA02FAB32D80025B103 /* Products */;
@@ -603,6 +607,14 @@
 				minimumVersion = 0.4.9;
 			};
 		};
+		959497582FBE186300357094 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.20;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -610,6 +622,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 957884EA2FBD022D00CC5F5D /* XCRemoteSwiftPackageReference "OpenAI" */;
 			productName = OpenAI;
+		};
+		959497592FBE186300357094 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 959497582FBE186300357094 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
