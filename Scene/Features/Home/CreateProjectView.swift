@@ -24,9 +24,9 @@ struct CreateProjectView: View {
             } label: {
                 
                 Label("Create New Project", systemImage: "plus.circle.fill")
-                    .font(.headline)
+                    .font(.system(size: 12))
                     .padding()
-                    .frame(maxWidth: 190, maxHeight: 56)
+                    .frame(maxWidth: 190, maxHeight: 46)
                     .foregroundStyle(.black)
             }
             .buttonStyle(.plain)

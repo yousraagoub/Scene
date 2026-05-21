@@ -21,8 +21,9 @@ struct SidebarView: View {
                     HStack{
                         Image(systemName: "archivebox.circle.fill")
                         Text("#3")
+                            
                     }
-                    .font(.title3)
+                    .font(.system(size: 16))
                     .foregroundColor(.secondary)
                     .padding(.leading, 14)
                     Spacer()
@@ -39,7 +40,7 @@ struct SidebarView: View {
 
             SidebarButton(
                 item: SidebarItem(
-                    title: "Create Project",
+                    title: "Create New Project",
                     systemImage: "plus.circle.fill"
                 ),
                 isSelected:

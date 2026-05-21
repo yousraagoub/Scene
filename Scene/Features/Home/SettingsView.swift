@@ -1,11 +1,11 @@
 //
-//  AccountMenuView.swift
+//  SettingsView.swift
 //  Scene
 //
 
 import SwiftUI
 
-struct AccountMenuView: View {
+struct SettingsView: View {
     
     @Binding var isExpanded: Bool
     
@@ -17,14 +17,12 @@ struct AccountMenuView: View {
             }
         } label: {
             
-            Image(systemName: "person.fill")
+            Image(systemName: "gearshape.fill")
                 .font(.system(size: 16))
-                      //                .font(.headline.bold())
                 .foregroundColor(.white)
-                .frame(width: 30, height: 30)
+                .padding()
         }
         .buttonStyle(.plain)
-        .frame(width: 70, height: 70)
         .glassEffect(in: Circle())
     }
     

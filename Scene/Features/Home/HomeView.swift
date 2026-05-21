@@ -30,7 +30,7 @@ struct HomeView: View {
                                 }
                             }
                         )
-                        .frame(width: isSidebarCollapsed ? 70 : 260, height: 218)
+                        .frame(width: isSidebarCollapsed ? 60 : 260, height: 218)
                         .glassEffect(in: RoundedRectangle(cornerRadius: 30))
 
                         Spacer()
@@ -39,8 +39,8 @@ struct HomeView: View {
                     .padding(.top, 30)
                     .overlay(alignment: .bottomLeading) {
 
-                        AccountMenuView(
-                            isExpanded: $homeVM.isAccountMenuExpanded
+                        SettingsView(
+                            isExpanded: $homeVM.isSettingsExpanded
                         )
                         .padding(.bottom, 30)
                         .padding(.leading, 30)
@@ -59,25 +59,23 @@ struct HomeView: View {
                 }
             }
 
-            if homeVM.isAccountMenuExpanded {
+            if homeVM.isSettingsExpanded {
                 Color.black.opacity(0.35)
                     .ignoresSafeArea()
                     .onTapGesture {
                         withAnimation(.spring(duration: 0.25)) {
-                            homeVM.isAccountMenuExpanded = false
+                            homeVM.isSettingsExpanded = false
                         }
                     }
                 
-                AccountMenuModalView(
-                    isExpanded: $homeVM.isAccountMenuExpanded,
-                    onDeleteAccount: homeVM.deleteAccount
+                SettingsViewModel(
+                    isExpanded: $homeVM.isSettingsExpanded
                 )
                 .environmentObject(settings)
                 .transition(.scale.combined(with: .opacity))
             }
         }
-        .animation(.spring(duration: 0.25), value: homeVM.isAccountMenuExpanded)
-        .toolbar(.hidden, for: .windowToolbar)
+        .animation(.spring(duration: 0.25), value: homeVM.isSettingsExpanded)
     }
 }
 
@@ -85,9 +83,12 @@ extension HomeView {
     @ViewBuilder
     private var detailView: some View{
         switch homeVM.selectedSection{
-        case .createProject: CreateProjectView(homeVM: homeVM)
-        case .projects: Text("Projects View")
-        case .analysis: Text("Analysis View")
+        case .createProject:
+            CreateProjectView(homeVM: homeVM)
+        case .projects:
+            Text("Projects View")
+        case .analysis:
+            Text("Analysis View")
         }
     }
 }
