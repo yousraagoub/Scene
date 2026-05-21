@@ -8,10 +8,6 @@ import Combine
 final class HomeViewModel: ObservableObject {
     @Published var selectedSection: HomeSection = .createProject
     @Published var isAccountMenuExpanded = false
- 
-    func signOut() {
-        print("Sign Out tapped")
-    }
     
     func deleteAccount() {
         print("Delete Account tapped")

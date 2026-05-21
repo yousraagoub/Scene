@@ -2,78 +2,30 @@
 //  AccountMenuView.swift
 //  Scene
 //
+
 import SwiftUI
 
 struct AccountMenuView: View {
-    @EnvironmentObject var settings: AppSettings
-    @Binding var isExpanded: Bool
     
-    let onSignOut: () -> Void
-    let onDeleteAccount: () -> Void
+    @Binding var isExpanded: Bool
     
     var body: some View {
         
         Button {
-            if !isExpanded {
+            withAnimation(.spring(duration: 0.25)) {
                 isExpanded = true
             }
         } label: {
             
-            Circle()
-                .frame(width: 40, height: 40)
-                .glassEffect(.clear)
-                .overlay {
-                    Image(systemName: "person.fill")
-                        .font(.headline.bold())
-                        .foregroundStyle(.white)
-                }
+            Image(systemName: "person.fill")
+                .font(.system(size: 16))
+                      //                .font(.headline.bold())
+                .foregroundColor(.white)
+                .frame(width: 30, height: 30)
         }
         .buttonStyle(.plain)
-        
-        .popover(
-            isPresented: $isExpanded,
-            attachmentAnchor: .point(.top),
-            arrowEdge: .bottom
-        ) {
-            
-            VStack(spacing: 10) {
-                
-                HStack(spacing: 8) {
-                    Circle()
-                        .fill(Color.primaryRed.gradient)
-                        .frame(width: 52, height: 52)
-                        .overlay {
-                            Image(systemName: "person.fill")
-                                .foregroundStyle(.white)
-                                .font(.title3.bold())
-                        }
-                    
-                    Text("John Appleseed")
-                        .font(.headline)
-                }
-                .padding(.bottom, 8)
-                Divider()
-                VStack(spacing: 8) {
-                    MenuActionButton(
-                        title: "Settings",
-                        systemImage: "gearshape.fill",
-                        role: .normal,
-                        action: {}
-                    )
-                }
-                Picker("Language", selection: $settings.language) {
-                    Text("English").tag(AppLanguage.english)
-                    Text("Arabic").tag(AppLanguage.arabic)
-                }
-                .pickerStyle(.segmented)
-                .padding()
-                .tint(.primaryRed)
-            }
-            .padding(16)
-            .frame(width: 260)
-            .onDisappear {
-                isExpanded = false
-            }
-        }
+        .frame(width: 70, height: 70)
+        .glassEffect(in: Circle())
     }
+    
 }

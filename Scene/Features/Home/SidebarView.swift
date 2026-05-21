@@ -16,20 +16,24 @@ struct SidebarView: View {
 
         VStack(spacing: 8) {
 
-            // Top controls
             HStack {
-
+                if !compact {
+                    HStack{
+                        Image(systemName: "archivebox.circle.fill")
+                        Text("#3")
+                    }
+                    .font(.title3)
+                    .foregroundColor(.secondary)
+                    .padding(.leading, 14)
+                    Spacer()
+                }
                 Button(action: onToggle) {
 
                     Image(systemName: "sidebar.left")
                         .font(.title3)
+                        .foregroundColor(.secondary)
                 }
                 .buttonStyle(.plain)
-
-                if !compact {
-
-                    Spacer()
-                }
             }
             .padding(.bottom,20)
 
