@@ -45,7 +45,7 @@ struct OnboardingView: View {
                             } else {
                 
                                 appState.isFirstLaunch = false
-                                appState.start()
+                                appState.navigate(to: .home)
                             }
                             
                         } label: {

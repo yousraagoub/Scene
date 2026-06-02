@@ -9,37 +9,32 @@ import SwiftData
 
 @main
 struct SceneApp: App {
-    
-    @StateObject private var settings = AppSettings()
-    @StateObject private var appState = AppState()
-    
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Itemm.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
+    @StateObject private var settings  = AppSettings()
+    @StateObject private var appState  = AppState()
+    @StateObject private var authService = CloudAuthService()
+
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([])
+        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false, cloudKitDatabase: .none)
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(for: schema, configurations: [config])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
 
- 
-
     var body: some SwiftUI.Scene {
-
         WindowGroup {
-            
             SceneRootView()
                 .environmentObject(appState)
                 .environmentObject(settings)
+                .environmentObject(authService)
                 .environment(\.locale, settings.locale)
                 .environment(\.layoutDirection, settings.layoutDirection)
                 .id(settings.language)
-                .onAppear {
-                    appState.start()
+                .task {
+                    await appState.start(authService: authService)
                 }
         }
         .defaultSize(width: 1400, height: 900)
@@ -47,3 +42,4 @@ struct SceneApp: App {
         .modelContainer(sharedModelContainer)
     }
 }
+
