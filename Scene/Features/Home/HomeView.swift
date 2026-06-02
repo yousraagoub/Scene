@@ -30,7 +30,7 @@ struct HomeView: View {
                                 }
                             }
                         )
-                        .frame(width: isSidebarCollapsed ? 60 : 260, height: 218)
+                        .frame(width: isSidebarCollapsed ? 60 : 260, height: 450)
                         .glassEffect(in: RoundedRectangle(cornerRadius: 30))
 
                         Spacer()
@@ -86,7 +86,7 @@ extension HomeView {
         case .createProject:
             CreateProjectView(homeVM: homeVM)
         case .projects:
-            Text("Projects View")
+            ProjectsView()
         case .analysis:
             Text("Analysis View")
         }
