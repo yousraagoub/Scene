@@ -7,6 +7,7 @@ import SwiftUI
 struct HomeView: View {
 
     @StateObject private var homeVM = HomeViewModel()
+    @StateObject private var authService = CloudAuthService()
     @EnvironmentObject var settings: AppSettings
 
     @State private var isSidebarCollapsed = false
@@ -30,7 +31,7 @@ struct HomeView: View {
                                 }
                             }
                         )
-                        .frame(width: isSidebarCollapsed ? 60 : 260, height: 450)
+                        .frame(width: isSidebarCollapsed ? 60 : 260, height: 218)
                         .glassEffect(in: RoundedRectangle(cornerRadius: 30))
 
                         Spacer()
@@ -55,6 +56,9 @@ struct HomeView: View {
                             .padding(.trailing, 30)
 
                         Spacer()
+                        //test
+                        Text(authService.authState == .signedIn ? "✅ Signed in" : "❌ Not signed in")
+                            .foregroundStyle(.white)
                     }
                 }
             }
@@ -86,7 +90,7 @@ extension HomeView {
         case .createProject:
             CreateProjectView(homeVM: homeVM)
         case .projects:
-            ProjectsView()
+            Text("Projects View")
         case .analysis:
             Text("Analysis View")
         }

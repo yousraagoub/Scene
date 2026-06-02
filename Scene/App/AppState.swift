@@ -24,13 +24,23 @@ extension AppState {
 
 extension AppState {
     
-    func start() {
-        
-        if isFirstLaunch {
+    func start(authService: CloudAuthService) async {
+        await authService.checkAuth()
+ 
+        switch authService.authState {
+        case .signedIn:
+            replace(with: .home)
+        case .signedOut, .restricted, .unknown:
             replace(with: .onboarding)
-            return
         }
-        
-        replace(with: .home)
     }
+//    func start() {
+//
+//        if isFirstLaunch {
+//            replace(with: .onboarding)
+//            return
+//        }
+//
+//        replace(with: .home)
+//    }
 }
