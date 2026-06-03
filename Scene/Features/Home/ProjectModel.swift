@@ -16,6 +16,8 @@ struct ProjectModel: Identifiable {
     var scriptType: ScriptType
 
     var fileURL: URL?
+
+    var breakdown: ScriptBreakdown?
 }
 
 enum ScriptType: String, CaseIterable {

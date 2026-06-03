@@ -133,12 +133,43 @@ struct CreateProjectPopUpView: View {
                 Spacer()
 
                 Button("Submit") {
-                    
+                    //MARK: - Dummy Data:
+                    let breakdown = ScriptBreakdown(
+                        sceneCount: 12,
+                        characters: [
+                            CharacterBreakdown(
+                                name: "John",
+                                role: "Main Character",
+                                sceneCount: 8
+                            ),
+                            CharacterBreakdown(
+                                name: "Sarah",
+                                role: "Supporting Character",
+                                sceneCount: 4
+                            )
+                        ],
+                        locations: [
+                            LocationBreakdown(
+                                name: "Coffee Shop",
+                                type: "Interior",
+                                sceneCount: 3
+                            )
+                        ],
+                        props: [
+                            PropBreakdown(name: "Notebook"),
+                            PropBreakdown(name: "Phone")
+                        ],
+                        visualEffects: [
+                            "Explosion",
+                            "Rain"
+                        ]
+                    )
                     let project = ProjectModel(
                         title: title,
                         genre: selectedGenre,
                         scriptType: selectedScriptType,
-                        fileURL: fileURL
+                        fileURL: fileURL,
+                        breakdown: breakdown
                     )
 
                     homeVM.projects.append(project)
