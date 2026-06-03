@@ -10,7 +10,7 @@ struct HomeView: View {
     @StateObject private var authService = CloudAuthService()
     @EnvironmentObject var settings: AppSettings
 
-    @State private var isSidebarCollapsed = false
+    @State private var isSidebarCollapsed = true
 
     var body: some View {
 
@@ -78,8 +78,27 @@ struct HomeView: View {
                 .environmentObject(settings)
                 .transition(.scale.combined(with: .opacity))
             }
+            
+            if homeVM.isCreateProjectExpanded {
+
+                Color.black.opacity(0.35)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+
+                        withAnimation(.spring(duration: 0.25)) {
+                            homeVM.isCreateProjectExpanded = false
+                        }
+                    }
+
+                CreateProjectPopUpView(
+                    homeVM: homeVM,
+                    isExpanded: $homeVM.isCreateProjectExpanded
+                )
+                .transition(.scale.combined(with: .opacity))
+            }
         }
         .animation(.spring(duration: 0.25), value: homeVM.isSettingsExpanded)
+        
     }
 }
 
@@ -88,7 +107,7 @@ extension HomeView {
     private var detailView: some View{
         switch homeVM.selectedSection{
         case .createProject:
-            CreateProjectView(homeVM: homeVM)
+            CreateProjectButtonView(homeVM: homeVM)
         case .projects:
             ProjectsView()
         case .analysis:
