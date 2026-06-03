@@ -25,3 +25,8 @@ fastlane/screenshots/
 
 # Archives
 *.xcarchive
+
+# Secrets
+Scene/Config.xcconfig
+Scene/Network/Secrets.swift
+*.xcconfig

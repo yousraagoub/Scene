@@ -14,8 +14,7 @@ struct CreateProjectView: View {
     @State private var errorMessage: String?
     @State private var breakdown: ScreenplayBreakdown?
 
-    private let apiKey = "YOUR_API_KEY"
-
+    private let apiKey = Secrets.openAIKey
     var body: some View {
         Button {
             showImporter = true

@@ -84,7 +84,7 @@ extension HomeView {
     private var detailView: some View{
         switch homeVM.selectedSection{
         case .createProject:
-            CreateProjectView(homeVM: homeVM)
+            CreateProjectView()
         case .projects:
             Text("Projects View")
         case .analysis:

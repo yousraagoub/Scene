@@ -145,7 +145,7 @@ enum ScreenplayEndpoint {
                 .system(.init(content: .textContent(systemPrompt))),
                 .user(.init(content: .string(userMessage)))
             ],
-            model: .gpt4,
+            model: "gpt-5.5",
             temperature: 0      // Zero temp = deterministic, schema-compliant output
         )
     }
