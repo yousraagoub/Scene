@@ -90,7 +90,7 @@ extension HomeView {
         case .createProject:
             CreateProjectView(homeVM: homeVM)
         case .projects:
-            Text("Projects View")
+            ProjectsView()
         case .analysis:
             Text("Analysis View")
         }

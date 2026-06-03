@@ -62,30 +62,6 @@ struct SidebarView: View {
                 homeVM.selectedSection = .projects
             }
 
-            if homeVM.selectedSection == .projects {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Recent Files")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal, 14)
-                        .padding(.top, 8)
-
-                    ForEach(homeVM.recentFiles, id: \.id) { file in
-                        HStack(spacing: 8) {
-                            Image(systemName: "doc.fill")
-                                .font(.system(size: 11))
-                                .foregroundColor(.primaryRed)
-                            Text(file.title)
-                                .font(.system(size: 12))
-                                .foregroundColor(.white)
-                            Spacer()
-                        }
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 6)
-                    }
-                }
-            }
-
             Spacer()
 
         }
