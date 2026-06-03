@@ -142,22 +142,9 @@ struct CreateProjectPopUpView: View {
                     )
 
                     homeVM.projects.append(project)
-                    
-                    homeVM.printProjects()
 
-                    print("========== PROJECT CREATED ==========")
-                    print("Title: \(project.title)")
-                    print("Genre: \(project.genre)")
-                    print("Script Type: \(project.scriptType.rawValue)")
-
-                    if let fileURL = project.fileURL {
-                        print("File: \(fileURL.lastPathComponent)")
-                    } else {
-                        print("File: No file selected")
-                    }
-
-                    print("Total Projects: \(homeVM.projects.count)")
-                    print("====================================")
+                    homeVM.selectedProject = project
+                    homeVM.selectedSection = .breakdown
 
                     isExpanded = false
                 }

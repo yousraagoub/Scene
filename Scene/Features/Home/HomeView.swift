@@ -46,9 +46,16 @@ struct HomeView: View {
                         .padding(.bottom, 30)
                         .padding(.leading, 30)
                     }
-                    
-                    detailView
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    VStack(alignment: .leading, spacing: 24) {
+
+                        headerView
+                            .padding(.top, 10)
+
+                        detailView
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.top, 30)
+                    .padding(.horizontal, 30)
                     
                     VStack {
                         Image("sceneLogo")
@@ -57,8 +64,8 @@ struct HomeView: View {
 
                         Spacer()
                         //test
-                        Text(authService.authState == .signedIn ? "✅ Signed in" : "❌ Not signed in")
-                            .foregroundStyle(.white)
+//                        Text(authService.authState == .signedIn ? "✅ Signed in" : "❌ Not signed in")
+//                            .foregroundStyle(.white)
                     }
                 }
             }
@@ -109,9 +116,59 @@ extension HomeView {
         case .createProject:
             CreateProjectButtonView(homeVM: homeVM)
         case .projects:
+            
             ProjectsView()
         case .analysis:
             Text("Analysis View")
+        case .breakdown:
+
+            if let project = homeVM.selectedProject {
+                BreakdownView(project: project)
+            }
+        }
+    }
+}
+
+
+
+extension HomeView {
+
+    @ViewBuilder
+    private var headerView: some View {
+
+        switch homeVM.selectedSection {
+
+        case .projects:
+
+            HStack(spacing: 8) {
+
+                Text("My Projects")
+                    .foregroundColor(.white)
+
+                Spacer()
+            }
+
+        case .breakdown:
+
+            if let project = homeVM.selectedProject {
+
+                HStack(spacing: 8) {
+
+                    Text("My Projects")
+                        .foregroundColor(.secondary)
+
+                    Image(systemName: "chevron.forward")
+                        .foregroundColor(.secondary)
+
+                    Text(project.title)
+                        .foregroundColor(.white)
+
+                    Spacer()
+                }
+            }
+
+        default:
+            EmptyView()
         }
     }
 }

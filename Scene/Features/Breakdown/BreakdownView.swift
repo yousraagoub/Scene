@@ -12,7 +12,6 @@ struct BreakdownView: View {
     var body: some View {
 
         VStack(alignment: .leading, spacing: 20) {
-
             Text(project.title)
                 .font(.largeTitle)
                 .foregroundColor(.white)
