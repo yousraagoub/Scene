@@ -134,47 +134,102 @@ struct CreateProjectPopUpView: View {
 
                 Button("Submit") {
                     //MARK: - Dummy Data:
-                    let breakdown = ScriptBreakdown(
-                        sceneCount: 12,
+                    let scene1 = SceneBreakdown(
+                        number: 1,
+                        title: "Coffee Shop",
                         characters: [
                             CharacterBreakdown(
                                 name: "John",
-                                role: "Main Character",
-                                sceneCount: 8
-                            ),
-                            CharacterBreakdown(
-                                name: "Sarah",
-                                role: "Supporting Character",
-                                sceneCount: 4
+                                role: "Lead"
                             )
                         ],
                         locations: [
                             LocationBreakdown(
                                 name: "Coffee Shop",
-                                type: "Interior",
-                                sceneCount: 3
+                                type: "Interior"
                             )
                         ],
                         props: [
+                            PropBreakdown(
+                                name: "Notebook"
+                            )
+                        ],
+                        visualEffects: [
+                            "Rain"
+                        ]
+                    )
+
+                    let scene2 = SceneBreakdown(
+                        number: 2,
+                        title: "Street",
+                        characters: [
+                            CharacterBreakdown(
+                                name: "Sarah",
+                                role: "Support"
+                            )
+                        ],
+                        locations: [
+                            LocationBreakdown(
+                                name: "Street",
+                                type: "Exterior"
+                            )
+                        ],
+                        props: [
+                            PropBreakdown(
+                                name: "Phone"
+                            )
+                        ],
+                        visualEffects: [
+                            "Explosion"
+                        ]
+                    )
+
+                    let breakdown = ScriptBreakdown(
+                        scenes: [
+                            scene1,
+                            scene2
+                        ],
+                        totalCharacters: [
+                            CharacterBreakdown(
+                                name: "John",
+                                role: "Lead"
+                            ),
+                            CharacterBreakdown(
+                                name: "Sarah",
+                                role: "Support"
+                            )
+                        ],
+                        totalLocations: [
+                            LocationBreakdown(
+                                name: "Coffee Shop",
+                                type: "Interior"
+                            ),
+                            LocationBreakdown(
+                                name: "Street",
+                                type: "Exterior"
+                            )
+                        ],
+                        totalProps: [
                             PropBreakdown(name: "Notebook"),
                             PropBreakdown(name: "Phone")
                         ],
-                        visualEffects: [
-                            "Explosion",
-                            "Rain"
+                        totalVisualEffects: [
+                            "Rain",
+                            "Explosion"
                         ]
                     )
                     let project = ProjectModel(
                         title: title,
                         genre: selectedGenre,
                         scriptType: selectedScriptType,
-                        fileURL: fileURL, 
+                        fileURL: fileURL,
                         breakdown: breakdown
                     )
 
                     homeVM.projects.append(project)
 
                     homeVM.selectedProject = project
+
                     homeVM.selectedSection = .breakdown
 
                     isExpanded = false

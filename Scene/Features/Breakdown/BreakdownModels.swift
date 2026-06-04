@@ -1,20 +1,33 @@
-//
-//  BreakdownModels.swift
-//  Scene
-//
 import Foundation
 
 struct ScriptBreakdown {
 
-    var sceneCount: Int
+    var scenes: [SceneBreakdown]
 
-    var characters: [CharacterBreakdown]
+    var totalCharacters: [CharacterBreakdown]
 
-    var locations: [LocationBreakdown]
+    var totalLocations: [LocationBreakdown]
 
-    var props: [PropBreakdown]
+    var totalProps: [PropBreakdown]
 
-    var visualEffects: [String]
+    var totalVisualEffects: [String]
+}
+
+struct SceneBreakdown: Identifiable {
+
+    let id = UUID()
+
+    let number: Int
+
+    let title: String
+
+    let characters: [CharacterBreakdown]
+
+    let locations: [LocationBreakdown]
+
+    let props: [PropBreakdown]
+
+    let visualEffects: [String]
 }
 
 struct CharacterBreakdown: Identifiable {
@@ -24,8 +37,6 @@ struct CharacterBreakdown: Identifiable {
     let name: String
 
     let role: String
-
-    let sceneCount: Int
 }
 
 struct LocationBreakdown: Identifiable {
@@ -35,8 +46,6 @@ struct LocationBreakdown: Identifiable {
     let name: String
 
     let type: String
-
-    let sceneCount: Int
 }
 
 struct PropBreakdown: Identifiable {

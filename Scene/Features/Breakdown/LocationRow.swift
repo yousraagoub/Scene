@@ -2,6 +2,7 @@
 //  LocationRow.swift
 //  Scene
 //
+
 import SwiftUI
 
 struct LocationRow: View {
@@ -12,7 +13,10 @@ struct LocationRow: View {
 
         HStack {
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(
+                alignment: .leading,
+                spacing: 4
+            ) {
 
                 Text(location.name)
                     .foregroundStyle(.white)
@@ -23,15 +27,15 @@ struct LocationRow: View {
             }
 
             Spacer()
-
-            Text("\(location.sceneCount) Scenes")
-                .font(.caption)
-                .foregroundStyle(.secondary)
         }
         .padding()
-        .background(Color.white.opacity(0.04))
+        .background(
+            Color.white.opacity(0.04)
+        )
         .clipShape(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(
+                cornerRadius: 16
+            )
         )
     }
 }

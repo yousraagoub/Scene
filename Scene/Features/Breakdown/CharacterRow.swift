@@ -2,6 +2,7 @@
 //  CharacterRow.swift
 //  Scene
 //
+
 import SwiftUI
 
 struct CharacterRow: View {
@@ -12,7 +13,10 @@ struct CharacterRow: View {
 
         HStack {
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(
+                alignment: .leading,
+                spacing: 4
+            ) {
 
                 Text(character.name)
                     .foregroundStyle(.white)
@@ -23,16 +27,15 @@ struct CharacterRow: View {
             }
 
             Spacer()
-
-            Text("\(character.sceneCount) Scenes")
-                .font(.caption)
-                .foregroundStyle(.secondary)
         }
         .padding()
-        .background(Color.white.opacity(0.04))
+        .background(
+            Color.white.opacity(0.04)
+        )
         .clipShape(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(
+                cornerRadius: 16
+            )
         )
     }
 }
-

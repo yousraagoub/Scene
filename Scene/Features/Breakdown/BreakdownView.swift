@@ -1,96 +1,156 @@
-//
-//  BreakdownView.swift
-//  Scene
-//
 import SwiftUI
 
 struct BreakdownView: View {
 
     let project: ProjectModel
 
+    @State private var selectedSceneIndex = 0
+
+    @State private var showBudget = false
+
     var body: some View {
 
-        ScrollView {
+        if let breakdown = project.breakdown {
 
-            if let breakdown = project.breakdown {
+            VStack{
 
-                VStack(spacing: 24) {
+                // MARK: - Top Bar
 
-                    topCards(
-                        breakdown: breakdown
-                    )
+                HStack {
 
-                    HStack(alignment: .top, spacing: 24) {
+                    Picker(
+                        "",
+                        selection: $showBudget
+                    ) {
 
-                        charactersSection(
-                            breakdown: breakdown
-                        )
+                        Text("Breakdown")
+                            .tag(false)
 
-                        locationsSection(
-                            breakdown: breakdown
-                        )
+                        Text("Budget")
+                            .tag(true)
                     }
+                    .pickerStyle(.segmented)
+                    .tint(.white)
+                    .padding(.bottom, 10)
+//                    .frame(width: 240)
 
-                    HStack(alignment: .top, spacing: 24) {
+                    Spacer()
 
-                        propsSection(
-                            breakdown: breakdown
-                        )
+                    if !showBudget {
 
-                        visualEffectsSection(
-                            breakdown: breakdown
+                        SceneNavigationView(
+                            sceneIndex: $selectedSceneIndex,
+                            totalScenes: breakdown.scenes.count
                         )
                     }
                 }
-                .padding()
-            }
-            else {
 
-                ContentUnavailableView(
-                    "No Breakdown Available",
-                    systemImage: "movieclapper",
-                    description: Text(
-                        "Upload and analyze a script first."
+                // MARK: - Content
+
+                if showBudget {
+
+                    BudgetView(
+                        breakdown: breakdown
                     )
+
+                } else {
+
+                    breakdownContent(
+                        breakdown: breakdown
+                    )
+                }
+            }
+
+        } else {
+
+            ContentUnavailableView(
+                "No Breakdown",
+                systemImage: "film"
+            )
+        }
+    }
+}
+
+// MARK: - Breakdown Content
+
+extension BreakdownView {
+
+    @ViewBuilder
+    func breakdownContent(
+        breakdown: ScriptBreakdown
+    ) -> some View {
+
+        let scene =
+        breakdown.scenes[selectedSceneIndex]
+
+        ScrollView {
+
+            VStack(spacing: 24) {
+
+                topCards(
+                    scene: scene
                 )
+
+                HStack(alignment: .top) {
+
+                    charactersSection(
+                        scene: scene
+                    )
+
+                    locationsSection(
+                        scene: scene
+                    )
+                }
+
+                HStack(alignment: .top) {
+
+                    propsSection(
+                        scene: scene
+                    )
+
+                    visualEffectsSection(
+                        scene: scene
+                    )
+                }
             }
         }
     }
 }
 
+// MARK: - Sections
 
 extension BreakdownView {
 
     @ViewBuilder
     func topCards(
-        breakdown: ScriptBreakdown
+        scene: SceneBreakdown
     ) -> some View {
 
         HStack(spacing: 20) {
 
             SummaryCard(
-                title: "Scenes",
-                count: breakdown.sceneCount,
-                icon: "movieclapper"
-            )
-
-            SummaryCard(
                 title: "Characters",
-                count: breakdown.characters.count,
+                count: scene.characters.count,
                 icon: "person.3.fill"
             )
 
             SummaryCard(
                 title: "Locations",
-                count: breakdown.locations.count,
+                count: scene.locations.count,
                 icon: "mappin.and.ellipse"
+            )
+
+            SummaryCard(
+                title: "Props",
+                count: scene.props.count,
+                icon: "shippingbox.fill"
             )
         }
     }
 
     @ViewBuilder
     func charactersSection(
-        breakdown: ScriptBreakdown
+        scene: SceneBreakdown
     ) -> some View {
 
         BreakdownSectionCard(
@@ -98,7 +158,7 @@ extension BreakdownView {
             icon: "person.3.fill"
         ) {
 
-            ForEach(breakdown.characters) {
+            ForEach(scene.characters) {
                 CharacterRow(character: $0)
             }
         }
@@ -106,7 +166,7 @@ extension BreakdownView {
 
     @ViewBuilder
     func locationsSection(
-        breakdown: ScriptBreakdown
+        scene: SceneBreakdown
     ) -> some View {
 
         BreakdownSectionCard(
@@ -114,7 +174,7 @@ extension BreakdownView {
             icon: "mappin.and.ellipse"
         ) {
 
-            ForEach(breakdown.locations) {
+            ForEach(scene.locations) {
                 LocationRow(location: $0)
             }
         }
@@ -122,7 +182,7 @@ extension BreakdownView {
 
     @ViewBuilder
     func propsSection(
-        breakdown: ScriptBreakdown
+        scene: SceneBreakdown
     ) -> some View {
 
         BreakdownSectionCard(
@@ -130,7 +190,7 @@ extension BreakdownView {
             icon: "shippingbox.fill"
         ) {
 
-            ForEach(breakdown.props) {
+            ForEach(scene.props) {
                 PropRow(prop: $0)
             }
         }
@@ -138,7 +198,7 @@ extension BreakdownView {
 
     @ViewBuilder
     func visualEffectsSection(
-        breakdown: ScriptBreakdown
+        scene: SceneBreakdown
     ) -> some View {
 
         BreakdownSectionCard(
@@ -147,19 +207,23 @@ extension BreakdownView {
         ) {
 
             ForEach(
-                breakdown.visualEffects,
+                scene.visualEffects,
                 id: \.self
             ) { effect in
 
                 Text(effect)
                     .padding()
-                    .frame(maxWidth: .infinity,
-                           alignment: .leading)
+                    .frame(
+                        maxWidth: .infinity,
+                        alignment: .leading
+                    )
                     .background(
                         Color.white.opacity(0.04)
                     )
                     .clipShape(
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(
+                            cornerRadius: 16
+                        )
                     )
             }
         }

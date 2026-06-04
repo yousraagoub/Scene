@@ -11,6 +11,8 @@ struct HomeView: View {
     @EnvironmentObject var settings: AppSettings
 
     @State private var isSidebarCollapsed = true
+    
+    @State private var hoverProjects = false
 
     var body: some View {
 
@@ -117,7 +119,7 @@ extension HomeView {
             CreateProjectButtonView(homeVM: homeVM)
         case .projects:
             
-            ProjectsView()
+            ProjectsView(homeVM: homeVM)
         case .analysis:
             Text("Analysis View")
         case .breakdown:
@@ -132,30 +134,41 @@ extension HomeView {
 
 
 extension HomeView {
+    
 
     @ViewBuilder
     private var headerView: some View {
+        
 
         switch homeVM.selectedSection {
 
         case .projects:
-
-            HStack(spacing: 8) {
-
-                Text("My Projects")
-                    .foregroundColor(.white)
-
-                Spacer()
+            if homeVM.projects.isEmpty {
+            } else {
+                HStack(spacing: 8) {
+                    
+                    Text("My Projects")
+                        .foregroundColor(.white)
+                    
+                    Spacer()
+                }
             }
-
         case .breakdown:
 
             if let project = homeVM.selectedProject {
 
                 HStack(spacing: 8) {
 
-                    Text("My Projects")
-                        .foregroundColor(.secondary)
+                    Button {
+                        homeVM.selectedSection = .projects
+                        homeVM.selectedProject = nil
+
+                    } label: {
+                        Text("My Projects")
+                            .foregroundColor(hoverProjects ? .white : .secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .onHover { hoverProjects = $0 }
 
                     Image(systemName: "chevron.forward")
                         .foregroundColor(.secondary)
