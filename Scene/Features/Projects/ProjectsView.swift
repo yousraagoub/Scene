@@ -1,8 +1,3 @@
-//
-//  ProjectsView.swift
-//  Scene
-//
-
 import SwiftUI
 
 struct ProjectsView: View {
@@ -10,14 +5,10 @@ struct ProjectsView: View {
     @StateObject private var vm = ProjectsViewModel()
 
     var body: some View {
-        VStack(alignment: .trailing, spacing: 16) {
+        VStack(alignment: .leading, spacing: 16) {
 
             HStack(spacing: 8) {
-                Text("All Previous Files")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(.white)
-                Image(systemName: "ellipsis.circle.fill")
-                    .foregroundColor(.secondary)
+                Spacer()
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -29,6 +20,7 @@ struct ProjectsView: View {
                     }
                 }
                 .padding(.bottom, 4)
+                .padding(.leading, 10)
             }
 
             Spacer()
@@ -44,40 +36,38 @@ struct FileCardView: View {
 
     let file: SceneFile
     let onDelete: () -> Void
-    @State private var hovered  = false
+
+    @State private var hovered = false
     @State private var showMenu = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
 
-            HStack {
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 10))
-                    .foregroundColor(.secondary)
-                Spacer()
+            HStack(alignment: .top) {
                 Text(file.title)
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(.white)
-                Button { showMenu.toggle() } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.system(size: 12))
-                        .foregroundColor(.secondary)
-                }
-                .buttonStyle(.plain)
-                .popover(isPresented: $showMenu) {
-                    Button(role: .destructive, action: onDelete) {
-                        Label("Delete", systemImage: "trash")
-                    }
-                    .padding(12)
-                }
+
+                Spacer()
+
+                Image(systemName: file.type == "film" ? "film" : "display")
+                    .font(.system(size: 13))
+                    .foregroundColor(.white.opacity(0.7))
+                    .padding(6)
+                    .background(Color.white.opacity(0.15))
+                    .clipShape(Circle())
             }
-            .padding(.bottom, 8)
 
             HStack(spacing: 4) {
                 ForEach(Array(file.genres.enumerated()), id: \.offset) { i, genre in
-                    Text(genre).font(.system(size: 10)).foregroundColor(.secondary)
+                    Text(genre)
+                        .font(.system(size: 10))
+                        .foregroundColor(.secondary)
+
                     if i < file.genres.count - 1 {
-                        Circle().fill(Color.secondary).frame(width: 3, height: 3)
+                        Circle()
+                            .fill(Color.secondary)
+                            .frame(width: 3, height: 3)
                     }
                 }
             }
@@ -85,16 +75,15 @@ struct FileCardView: View {
             Spacer()
 
             HStack {
-                Text(file.status.rawValue)
-                    .font(.system(size: 10, weight: .semibold))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(file.status.color)
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                Image(systemName: "clock")
+                    .font(.system(size: 9))
+                    .foregroundColor(.secondary)
+
+                Text(file.date)
+                    .font(.system(size: 10))
+                    .foregroundColor(.secondary)
+
                 Spacer()
-                Image(systemName: "clock").font(.system(size: 9)).foregroundColor(.secondary)
-                Text(file.date).font(.system(size: 10)).foregroundColor(.secondary)
             }
         }
         .padding(14)
@@ -103,8 +92,25 @@ struct FileCardView: View {
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .overlay(
             RoundedRectangle(cornerRadius: 14)
-                .stroke(hovered ? Color.primaryRed.opacity(0.4) : Color.white.opacity(0.08), lineWidth: 1)
+                .strokeBorder(lineWidth: 2)
+                .foregroundStyle(.ultraThinMaterial)
         )
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color.white.opacity(0.15), lineWidth: 1)
+        )
+        
+        .overlay(alignment: .bottomTrailing) {
+            Button(action: onDelete) {
+                Image(systemName: "trash")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(Color.primaryRed)
+            }
+            .buttonStyle(.plain)
+            .opacity(hovered ? 1 : 0)
+            .animation(.easeInOut(duration: 0.15), value: hovered)
+            .offset(x: -8, y: -8)
+        }
         .scaleEffect(hovered ? 1.02 : 1.0)
         .animation(.spring(response: 0.22, dampingFraction: 0.7), value: hovered)
         .onHover { hovered = $0 }
