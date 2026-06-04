@@ -168,7 +168,7 @@ struct CreateProjectPopUpView: View {
                         title: title,
                         genre: selectedGenre,
                         scriptType: selectedScriptType,
-                        fileURL: fileURL,
+                        fileURL: fileURL, 
                         breakdown: breakdown
                     )
 
