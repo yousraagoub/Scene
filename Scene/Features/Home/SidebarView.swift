@@ -20,7 +20,7 @@ struct SidebarView: View {
                 if !compact {
                     HStack{
                         Image(systemName: "archivebox.circle.fill")
-                        Text("#3")
+                        Text("\(homeVM.projects.count)")
                             
                     }
                     .font(.system(size: 16))
