@@ -25,3 +25,6 @@ fastlane/screenshots/
 
 # Archives
 *.xcarchive
+
+#AI API Key
+**/Config.xcconfig
