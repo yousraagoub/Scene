@@ -24,7 +24,7 @@ struct SummaryCard: View {
                         .glassEffect(.clear)
                     Image(systemName: icon)
                         .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(color)
+                        .foregroundStyle(color.opacity(0.7))
                 }
                 Text(title)
                     .font(.system(size: 12, weight: .medium))

@@ -22,7 +22,7 @@ struct SceneNavigationView: View {
 
             } label: {
 
-                Image(systemName: "chevron.left")
+                Image(systemName: "chevron.backward")
             }
 
             Text(
@@ -38,8 +38,9 @@ struct SceneNavigationView: View {
 
             } label: {
 
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
             }
+            .labelStyle(.iconOnly)
         }
       //  .foregroundStyle(.white)
     }
