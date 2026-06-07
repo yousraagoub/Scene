@@ -126,23 +126,23 @@ struct BudgetView: View {
     private func iconColor(for icon: String) -> Color {
         switch icon {
         case "person.3.fill":
-            return .indigo
+            return .indigo.opacity(0.7)
         case "location.fill":
-            return .cyan
+            return .cyan.opacity(0.7)
         case "shippingbox.fill":
-            return .orange
+            return .orange.opacity(0.7)
         case "car.fill":
-            return .blue
+            return .blue.opacity(0.7)
         case "hare.fill":
-            return .green
+            return .green.opacity(0.7)
         case "tshirt.fill":
-            return .pink
+            return .pink.opacity(0.7)
         case "paintbrush.fill":
-            return .red
+            return .red.opacity(0.7)
         case "camera.fill":
-            return .yellow
+            return .yellow.opacity(0.7)
         default:
-            return .secondary
+            return .secondary.opacity(0.7)
         }
     }
 
