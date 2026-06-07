@@ -10,6 +10,7 @@ struct SettingsViewModel: View {
     @EnvironmentObject var settings: AppSettings
     @State private var isEditingName = false
     @Binding var isExpanded: Bool
+    @State private var hoverProjects = false
 
 
     var body: some View {
@@ -49,9 +50,10 @@ struct SettingsViewModel: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 18)
-                        .foregroundColor(.white.opacity(isEditingName ? 1 : 0.6))
+                        .foregroundColor(.white.opacity(hoverProjects ? 1 : 0.6))
                 }
                 .buttonStyle(.plain)
+                .onHover { hoverProjects = $0 }
                 Spacer()
                     
             }
