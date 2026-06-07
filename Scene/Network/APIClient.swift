@@ -6,9 +6,18 @@
 //
 
 import Foundation
-import OpenAI
+//import OpenAI
 
 //  Production Entity Models
+struct ChatResponse: Codable {
+    struct Choice: Codable {
+        struct Message: Codable {
+            let content: String
+        }
+        let message: Message
+    }
+    let choices: [Choice]
+}
 
 struct ProductionEntities: Codable {
     let characters: [Character]

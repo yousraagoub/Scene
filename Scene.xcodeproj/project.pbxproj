@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		952240192FD4F70B00AA22EB /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 952240182FD4F70B00AA22EB /* ZIPFoundation */; };
 		957884EC2FBD022D00CC5F5D /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 957884EB2FBD022D00CC5F5D /* OpenAI */; };
 /* End PBXBuildFile section */
 
@@ -33,9 +34,22 @@
 		91ED4DB82FAB32DA0025B103 /* SceneUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SceneUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		952240212FD4FEF300AA22EB /* Exceptions for "Scene" folder in "Scene" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 91ED4D9E2FAB32D80025B103 /* Scene */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		91ED4DA12FAB32D80025B103 /* Scene */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				952240212FD4FEF300AA22EB /* Exceptions for "Scene" folder in "Scene" target */,
+			);
 			path = Scene;
 			sourceTree = "<group>";
 		};
@@ -57,6 +71,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				957884EC2FBD022D00CC5F5D /* OpenAI in Frameworks */,
+				952240192FD4F70B00AA22EB /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +133,7 @@
 			name = Scene;
 			packageProductDependencies = (
 				957884EB2FBD022D00CC5F5D /* OpenAI */,
+				952240182FD4F70B00AA22EB /* ZIPFoundation */,
 			);
 			productName = Scene;
 			productReference = 91ED4D9F2FAB32D80025B103 /* Scene.app */;
@@ -204,6 +220,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				957884EA2FBD022D00CC5F5D /* XCRemoteSwiftPackageReference "OpenAI" */,
+				952240172FD4F70B00AA22EB /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 91ED4DA02FAB32D80025B103 /* Products */;
@@ -281,6 +298,8 @@
 /* Begin XCBuildConfiguration section */
 		91ED4DC02FAB32DA0025B103 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 91ED4DA12FAB32D80025B103 /* Scene */;
+			baseConfigurationReferenceRelativePath = Secret/Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -346,6 +365,8 @@
 		};
 		91ED4DC12FAB32DA0025B103 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 91ED4DA12FAB32D80025B103 /* Scene */;
+			baseConfigurationReferenceRelativePath = Secret/Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -403,6 +424,8 @@
 		};
 		91ED4DC32FAB32DA0025B103 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 91ED4DA12FAB32D80025B103 /* Scene */;
+			baseConfigurationReferenceRelativePath = Secret/Config.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -411,12 +434,23 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2TVS2FW6G2;
+				DEVELOPMENT_TEAM = 532LKBA8VZ;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Scene/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -439,6 +473,8 @@
 		};
 		91ED4DC42FAB32DA0025B103 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 91ED4DA12FAB32D80025B103 /* Scene */;
+			baseConfigurationReferenceRelativePath = Secret/Config.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -447,12 +483,23 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2TVS2FW6G2;
+				DEVELOPMENT_TEAM = 532LKBA8VZ;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Scene/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -475,6 +522,8 @@
 		};
 		91ED4DC62FAB32DA0025B103 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 91ED4DA12FAB32D80025B103 /* Scene */;
+			baseConfigurationReferenceRelativePath = Secret/Config.xcconfig;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -496,6 +545,8 @@
 		};
 		91ED4DC72FAB32DA0025B103 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 91ED4DA12FAB32D80025B103 /* Scene */;
+			baseConfigurationReferenceRelativePath = Secret/Config.xcconfig;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -517,6 +568,8 @@
 		};
 		91ED4DC92FAB32DA0025B103 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 91ED4DA12FAB32D80025B103 /* Scene */;
+			baseConfigurationReferenceRelativePath = Secret/Config.xcconfig;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -536,6 +589,8 @@
 		};
 		91ED4DCA2FAB32DA0025B103 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 91ED4DA12FAB32D80025B103 /* Scene */;
+			baseConfigurationReferenceRelativePath = Secret/Config.xcconfig;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -595,6 +650,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		952240172FD4F70B00AA22EB /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.20;
+			};
+		};
 		957884EA2FBD022D00CC5F5D /* XCRemoteSwiftPackageReference "OpenAI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MacPaw/OpenAI.git";
@@ -606,6 +669,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		952240182FD4F70B00AA22EB /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 952240172FD4F70B00AA22EB /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
 		957884EB2FBD022D00CC5F5D /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 957884EA2FBD022D00CC5F5D /* XCRemoteSwiftPackageReference "OpenAI" */;

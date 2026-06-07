@@ -5,7 +5,7 @@
 //  Created by Yousra Abdelrahman on 19/11/1447 AH.
 //
 import Foundation
-import OpenAI
+//import OpenAI
 
 //  Screenplay Endpoint
 //
@@ -125,13 +125,33 @@ enum ScreenplayEndpoint {
 
     Output ONLY the JSON object.
     """
-
-    // MARK: - Query Builder
-
-    /// Builds the ChatQuery to send to the API.
-    /// - Parameter screenplayText: Raw screenplay text from the front end.
-    /// - Returns: A ready-to-send `ChatQuery`.
-    static func query(for screenplayText: String) -> ChatQuery {
+//
+//    // MARK: - Query Builder
+//
+//    /// Builds the ChatQuery to send to the API.
+//    /// - Parameter screenplayText: Raw screenplay text from the front end.
+//    /// - Returns: A ready-to-send `ChatQuery`.
+//    static func query(for screenplayText: String) -> ChatQuery {
+//        let userMessage = """
+//        Analyze the following screenplay and return only the JSON breakdown:
+//
+//        ---
+//        \(screenplayText)
+//        ---
+//        """
+//
+//        return ChatQuery(
+//            messages: [
+//                .system(.init(content: .textContent(systemPrompt))),
+//                .user(.init(content: .string(userMessage)))
+//            ],
+//            model: .gpt5,
+//            temperature: 0      // Zero temp = deterministic, schema-compliant output
+//        )
+//    }
+//}
+    
+    static func requestBody(for screenplayText: String) -> [String: Any] {
         let userMessage = """
         Analyze the following screenplay and return only the JSON breakdown:
 
@@ -140,13 +160,32 @@ enum ScreenplayEndpoint {
         ---
         """
 
-        return ChatQuery(
-            messages: [
-                .system(.init(content: .textContent(systemPrompt))),
-                .user(.init(content: .string(userMessage)))
+        return [
+            "model": "gpt-4o",
+            "messages": [
+                ["role": "system", "content": systemPrompt],
+                ["role": "user",   "content": userMessage]
             ],
-            model: .gpt4,
-            temperature: 0      // Zero temp = deterministic, schema-compliant output
-        )
+            "temperature": 0
+        ]
     }
 }
+//    static func requestBody(for screenplayText: String, model: String = "gpt-4o") -> [String: Any] {
+//           let userMessage = """
+//           Analyze the following screenplay and return only the JSON breakdown:
+//
+//           ---
+//           \(screenplayText)
+//           ---
+//           """
+//
+//           return [
+//               "model": model,
+//               "messages": [
+//                   ["role": "system", "content": systemPrompt],
+//                   ["role": "user",   "content": userMessage]
+//               ],
+//               "temperature": 0
+//           ]
+//       }
+//   }
