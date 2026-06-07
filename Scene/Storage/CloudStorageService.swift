@@ -8,489 +8,201 @@
 import CloudKit
 import Foundation
 
-// MARK: - Protocol
+// MARK: - CloudStorageService
+//
+// All CloudKit operations go through here. ViewModels call only this.
+//
+// Query count per operation:
+//   loadProjects()         → 1 query
+//   loadBreakdown(for:)    → 2 parallel queries (Entities + Scenes)
+//   updateCost(...)        → 0 queries — direct fetch by recordID
+//   deleteProject(id:)     → 1 delete — cascades to all Entities + Scenes via .deleteSelf
 
-protocol CloudStorageServiceProtocol {
-    func checkAccountStatus() async throws -> CKAccountStatus
+final class CloudStorageService {
 
-    // Projects
-    func saveProject(_ project: CloudProject) async throws -> CloudProject
-    func fetchProjects() async throws -> [CloudProject]
-    func fetchProject(recordName: String) async throws -> CloudProject
-    func updateProject(_ project: CloudProject) async throws -> CloudProject
-    func deleteProject(recordName: String) async throws
+    private let db = CKContainer.default().privateCloudDatabase
 
-    // Production Entities — created by AI, never edited by user
-    func saveProductionEntities(_ entities: [CloudProductionEntity]) async throws -> [CloudProductionEntity]
-    func fetchProductionEntities(projectRecordName: String) async throws -> [CloudProductionEntity]
+    // MARK: - Save
 
-    // Budget Entries — created by user, editable
-    func saveBudgetEntry(_ entry: CloudBudgetEntry) async throws -> CloudBudgetEntry
-    func fetchBudgetEntries(projectRecordName: String) async throws -> [CloudBudgetEntry]
-    func updateBudgetEntry(_ entry: CloudBudgetEntry) async throws -> CloudBudgetEntry
-    func deleteBudgetEntry(recordName: String) async throws
-
-    // Scenes — created by AI, never edited by user
-    func saveScenes(_ scenes: [CloudScene]) async throws -> [CloudScene]
-    func fetchScenes(projectRecordName: String) async throws -> [CloudScene]
-}
-
-// MARK: - Project Status
-
-enum ProjectStatus: String {
-    case pending    // created, no script yet
-    case analyzing  // script uploaded, AI running
-    case ready      // analysis complete
-    case failed     // analysis failed
-}
-
-// MARK: - Cloud Models
-
-struct CloudProject {
-    var recordID: CKRecord.ID?
-    var title: String
-    var description: String
-    var scriptFileData: Data?       // set before upload
-    var scriptFileURL: URL?         // populated after fetch
-    var breakdownFileData: Data?    // set after AI analysis (JSON as Data)
-    var breakdownFileURL: URL?      // populated after fetch
-    var status: ProjectStatus
-    var totalBudget: Double
-    var createdAt: Date
-    var updatedAt: Date
-}
-
-/// Represents a single production element extracted by the AI from the screenplay.
-/// Created automatically — never manually edited by the user.
-struct CloudProductionEntity {
-    var recordID: CKRecord.ID?
-    var projectReference: CKRecord.Reference
-    var sourceID: String            // AI's entity ID e.g. "char_001"
-    var name: String
-    var category: EntityCategory
-    var detailsJSON: String         // aliases, traits, type, department, etc.
-
-    enum EntityCategory: String, CaseIterable {
-        case cast, location, props, wardrobe, makeup,
-             vehicles, equipment, vfx, sfx, animals, setDressing
-    }
-}
-
-/// Represents a cost assigned to a production entity by the user.
-/// Created manually — fully editable.
-struct CloudBudgetEntry {
-    var recordID: CKRecord.ID?
-    var projectReference: CKRecord.Reference
-    var entityReference: CKRecord.Reference  // → ProductionEntity
-    var cost: Double
-    var notes: String
-}
-
-/// Represents a scene extracted by the AI from the screenplay.
-/// Created automatically — never manually edited by the user.
-struct CloudScene {
-    var recordID: CKRecord.ID?
-    var projectReference: CKRecord.Reference
-    var sourceID: String                        // AI's sceneId e.g. "scene_001"
-    var sceneNumber: Int
-    var heading: String
-    var time: String
-    var locationReference: CKRecord.Reference?  // → ProductionEntity (category: location)
-    var castItems: [CKRecord.Reference]         // → ProductionEntities (performance layer)
-    var productionItems: [CKRecord.Reference]   // → ProductionEntities (production layer)
-    var postItems: [CKRecord.Reference]         // → ProductionEntities (post layer)
-}
-
-// MARK: - Error
-
-enum CloudStorageError: LocalizedError {
-    case notSignedIn
-    case recordNotFound(String)
-    case encodingFailed
-    case decodingFailed(String)
-    case saveFailed(String)
-    case deleteFailed(String)
-    case unknown(Error)
-
-    var errorDescription: String? {
-        switch self {
-        case .notSignedIn:             return "iCloud account not signed in."
-        case .recordNotFound(let id):  return "Record not found: \(id)"
-        case .encodingFailed:          return "Failed to encode data for upload."
-        case .decodingFailed(let d):   return "Failed to decode cloud record: \(d)"
-        case .saveFailed(let d):       return "Save failed: \(d)"
-        case .deleteFailed(let d):     return "Delete failed: \(d)"
-        case .unknown(let e):          return "Unexpected error: \(e.localizedDescription)"
-        }
-    }
-}
-
-// MARK: - Field Keys
-
-private enum RecordType {
-    static let project          = "Projects"
-    static let productionEntity = "ProductionEntities"
-    static let budgetEntry      = "BudgetItems"
-    static let scene            = "Scene"
-}
-
-private enum ProjectField {
-    static let title         = "title"
-    static let description   = "description"
-    static let scriptFile    = "script_file"
-    static let breakdownFile = "breakdown_file"   // CKAsset — not a String
-    static let status        = "status"
-    static let totalBudget   = "total_budget"
-    static let createdAt     = "created_at"
-    static let updatedAt     = "updated_at"
-}
-
-private enum ProductionEntityField {
-    static let project     = "project"
-    static let sourceID    = "source_id"
-    static let name        = "name"
-    static let category    = "category"
-    static let detailsJSON = "details_json"
-}
-
-private enum BudgetEntryField {
-    static let project = "project"
-    static let entity  = "entity"
-    static let cost    = "cost"
-    static let notes   = "notes"
-}
-
-private enum SceneField {
-    static let project         = "project"
-    static let sourceID        = "source_id"
-    static let sceneNumber     = "scene_number"
-    static let heading         = "heading"
-    static let time            = "time"
-    static let location        = "location"
-    static let castItems       = "cast_items"
-    static let productionItems = "production_items"
-    static let postItems       = "post_items"
-}
-
-// MARK: - Service
-
-final class CloudStorageService: CloudStorageServiceProtocol {
-
-    private let container: CKContainer
-    private let privateDB: CKDatabase
-
-    init(containerIdentifier: String? = nil) {
-        container = containerIdentifier.map(CKContainer.init) ?? .default()
-        privateDB = container.privateCloudDatabase
+    func saveProject(_ project: ProjectModel) async throws {
+        try await save([project.toCKRecord()])
     }
 
-    // MARK: - Account
-
-    func checkAccountStatus() async throws -> CKAccountStatus {
-        let status = try await container.accountStatus()
-        guard status == .available else { throw CloudStorageError.notSignedIn }
-        return status
-    }
-
-    // MARK: - Projects
-
-    func saveProject(_ project: CloudProject) async throws -> CloudProject {
-        let record = CKRecord(recordType: RecordType.project)
-        try populate(record, from: project)
-        do { return try mapProject(from: try await privateDB.save(record)) }
-        catch { throw CloudStorageError.saveFailed(error.localizedDescription) }
-    }
-
-    func fetchProjects() async throws -> [CloudProject] {
-        let query = CKQuery(recordType: RecordType.project, predicate: NSPredicate(value: true))
-        query.sortDescriptors = [NSSortDescriptor(key: ProjectField.updatedAt, ascending: false)]
-        let (results, _) = try await privateDB.records(matching: query)
-        return try results.compactMap { _, result in
-            guard case .success(let r) = result else { return nil }
-            return try mapProject(from: r)
-        }
-    }
-
-    func fetchProject(recordName: String) async throws -> CloudProject {
-        try mapProject(from: try await privateDB.record(for: CKRecord.ID(recordName: recordName)))
-    }
-
-    func updateProject(_ project: CloudProject) async throws -> CloudProject {
-        guard let recordID = project.recordID else { return try await saveProject(project) }
-        let record = try await privateDB.record(for: recordID)
-        record[ProjectField.title]       = project.title
-        record[ProjectField.description] = project.description
-        record[ProjectField.status]      = project.status.rawValue
-        record[ProjectField.totalBudget] = project.totalBudget
-        record[ProjectField.updatedAt]   = Date()
-        if let data = project.scriptFileData {
-            record[ProjectField.scriptFile] = try makeAsset(from: data, name: "\(recordID.recordName)_script")
-        }
-        if let data = project.breakdownFileData {
-            record[ProjectField.breakdownFile] = try makeAsset(from: data, name: "\(recordID.recordName)_breakdown")
-        }
-        do { return try mapProject(from: try await privateDB.save(record)) }
-        catch { throw CloudStorageError.saveFailed(error.localizedDescription) }
-    }
-
-    func deleteProject(recordName: String) async throws {
-        // Cascade: ProductionEntities, BudgetEntries, Scenes with .deleteSelf auto-deleted
-        do { try await privateDB.deleteRecord(withID: CKRecord.ID(recordName: recordName)) }
-        catch { throw CloudStorageError.deleteFailed(error.localizedDescription) }
-    }
-
-    // MARK: - Production Entities
-
-    func saveProductionEntities(_ entities: [CloudProductionEntity]) async throws -> [CloudProductionEntity] {
-        let records = entities.map { entity -> CKRecord in
-            let r = CKRecord(recordType: RecordType.productionEntity)
-            populate(r, from: entity)
-            return r
-        }
-        let results = try await privateDB.modifyRecords(saving: records, deleting: [])
-        return try results.saveResults.compactMap { _, result in
-            guard case .success(let r) = result else { return nil }
-            return try mapProductionEntity(from: r)
-        }
-    }
-
-    func fetchProductionEntities(projectRecordName: String) async throws -> [CloudProductionEntity] {
-        let ref = CKRecord.Reference(recordID: CKRecord.ID(recordName: projectRecordName), action: .none)
-        let predicate = NSPredicate(format: "%K == %@", ProductionEntityField.project, ref)
-        let query = CKQuery(recordType: RecordType.productionEntity, predicate: predicate)
-        query.sortDescriptors = [NSSortDescriptor(key: ProductionEntityField.name, ascending: true)]
-        let (results, _) = try await privateDB.records(matching: query)
-        return try results.compactMap { _, result in
-            guard case .success(let r) = result else { return nil }
-            return try mapProductionEntity(from: r)
-        }
-    }
-
-    // MARK: - Budget Entries
-
-    func saveBudgetEntry(_ entry: CloudBudgetEntry) async throws -> CloudBudgetEntry {
-        let record = CKRecord(recordType: RecordType.budgetEntry)
-        populate(record, from: entry)
-        do { return try mapBudgetEntry(from: try await privateDB.save(record)) }
-        catch { throw CloudStorageError.saveFailed(error.localizedDescription) }
-    }
-
-    func fetchBudgetEntries(projectRecordName: String) async throws -> [CloudBudgetEntry] {
-        let ref = CKRecord.Reference(recordID: CKRecord.ID(recordName: projectRecordName), action: .none)
-        let predicate = NSPredicate(format: "%K == %@", BudgetEntryField.project, ref)
-        let query = CKQuery(recordType: RecordType.budgetEntry, predicate: predicate)
-        let (results, _) = try await privateDB.records(matching: query)
-        return try results.compactMap { _, result in
-            guard case .success(let r) = result else { return nil }
-            return try mapBudgetEntry(from: r)
-        }
-    }
-
-    func updateBudgetEntry(_ entry: CloudBudgetEntry) async throws -> CloudBudgetEntry {
-        guard let recordID = entry.recordID else { return try await saveBudgetEntry(entry) }
-        let record = try await privateDB.record(for: recordID)
-        record[BudgetEntryField.cost]  = entry.cost
-        record[BudgetEntryField.notes] = entry.notes
-        do { return try mapBudgetEntry(from: try await privateDB.save(record)) }
-        catch { throw CloudStorageError.saveFailed(error.localizedDescription) }
-    }
-
-    func deleteBudgetEntry(recordName: String) async throws {
-        do { try await privateDB.deleteRecord(withID: CKRecord.ID(recordName: recordName)) }
-        catch { throw CloudStorageError.deleteFailed(error.localizedDescription) }
-    }
-
-    // MARK: - Scenes
-
-    func saveScenes(_ scenes: [CloudScene]) async throws -> [CloudScene] {
-        let records = scenes.map { scene -> CKRecord in
-            let r = CKRecord(recordType: RecordType.scene)
-            populate(r, from: scene)
-            return r
-        }
-        let results = try await privateDB.modifyRecords(saving: records, deleting: [])
-        return try results.saveResults.compactMap { _, result in
-            guard case .success(let r) = result else { return nil }
-            return try mapScene(from: r)
-        }
-    }
-
-    func fetchScenes(projectRecordName: String) async throws -> [CloudScene] {
-        let ref = CKRecord.Reference(recordID: CKRecord.ID(recordName: projectRecordName), action: .none)
-        let predicate = NSPredicate(format: "%K == %@", SceneField.project, ref)
-        let query = CKQuery(recordType: RecordType.scene, predicate: predicate)
-        query.sortDescriptors = [NSSortDescriptor(key: SceneField.sceneNumber, ascending: true)]
-        let (results, _) = try await privateDB.records(matching: query)
-        return try results.compactMap { _, result in
-            guard case .success(let r) = result else { return nil }
-            return try mapScene(from: r)
-        }
-    }
-}
-
-// MARK: - Record Populators
-
-private extension CloudStorageService {
-
-    func populate(_ record: CKRecord, from project: CloudProject) throws {
-        record[ProjectField.title]       = project.title
-        record[ProjectField.description] = project.description
-        record[ProjectField.status]      = project.status.rawValue
-        record[ProjectField.totalBudget] = project.totalBudget
-        record[ProjectField.createdAt]   = project.createdAt
-        record[ProjectField.updatedAt]   = project.updatedAt
-        let name = record.recordID.recordName
-        if let data = project.scriptFileData {
-            record[ProjectField.scriptFile] = try makeAsset(from: data, name: "\(name)_script")
-        }
-        if let data = project.breakdownFileData {
-            record[ProjectField.breakdownFile] = try makeAsset(from: data, name: "\(name)_breakdown")
-        }
-    }
-
-    func populate(_ record: CKRecord, from entity: CloudProductionEntity) {
-        record[ProductionEntityField.project] = CKRecord.Reference(
-            recordID: entity.projectReference.recordID, action: .deleteSelf
+    /// Saves the full breakdown for a project.
+    /// Entities are saved before scenes because scenes reference entity IDs.
+    func saveBreakdown(_ breakdown: ScriptBreakdown, for projectId: String) async throws {
+        let projectRef = CKRecord.Reference(
+            recordID: CKRecord.ID(recordName: projectId),
+            action: .deleteSelf
         )
-        record[ProductionEntityField.sourceID]    = entity.sourceID
-        record[ProductionEntityField.name]        = entity.name
-        record[ProductionEntityField.category]    = entity.category.rawValue
-        record[ProductionEntityField.detailsJSON] = entity.detailsJSON
-    }
 
-    func populate(_ record: CKRecord, from entry: CloudBudgetEntry) {
-        record[BudgetEntryField.project] = CKRecord.Reference(
-            recordID: entry.projectReference.recordID, action: .deleteSelf
-        )
-        record[BudgetEntryField.entity] = CKRecord.Reference(
-            recordID: entry.entityReference.recordID, action: .none
-        )
-        record[BudgetEntryField.cost]  = entry.cost
-        record[BudgetEntryField.notes] = entry.notes
-    }
+        // Break down the entity record creation into separate arrays to help the compiler
+        let characterRecords = breakdown.totalCharacters.map { $0.toCKRecord(projectId: projectId, projectRef: projectRef) }
+        let locationRecords = breakdown.totalLocations.map { $0.toCKRecord(projectId: projectId, projectRef: projectRef) }
+        let propRecords = breakdown.totalProps.map { $0.toCKRecord(projectId: projectId, projectRef: projectRef) }
+        let vehicleRecords = breakdown.totalVehicles.map { $0.toCKRecord(projectId: projectId, projectRef: projectRef) }
+        let animalRecords = breakdown.totalAnimals.map { $0.toCKRecord(projectId: projectId, projectRef: projectRef) }
+        let wardrobeRecords = breakdown.totalWardrobe.map { $0.toCKRecord(projectId: projectId, projectRef: projectRef) }
+        let makeupRecords = breakdown.totalMakeup.map { $0.toCKRecord(projectId: projectId, projectRef: projectRef) }
+        let equipmentRecords = breakdown.totalEquipment.map { $0.toCKRecord(projectId: projectId, projectRef: projectRef) }
+        
+        let entityRecords: [CKRecord] = characterRecords + locationRecords + propRecords + vehicleRecords + 
+                                       animalRecords + wardrobeRecords + makeupRecords + equipmentRecords
 
-    func populate(_ record: CKRecord, from scene: CloudScene) {
-        record[SceneField.project] = CKRecord.Reference(
-            recordID: scene.projectReference.recordID, action: .deleteSelf
-        )
-        record[SceneField.sourceID]    = scene.sourceID
-        record[SceneField.sceneNumber] = scene.sceneNumber
-        record[SceneField.heading]     = scene.heading
-        record[SceneField.time]        = scene.time
-        record[SceneField.location]    = scene.locationReference
-        record[SceneField.castItems] = scene.castItems.map {
-            CKRecord.Reference(recordID: $0.recordID, action: .none)
-        }
-        record[SceneField.productionItems] = scene.productionItems.map {
-            CKRecord.Reference(recordID: $0.recordID, action: .none)
-        }
-        record[SceneField.postItems] = scene.postItems.map {
-            CKRecord.Reference(recordID: $0.recordID, action: .none)
+        let sceneRecords: [CKRecord] = breakdown.scenes.map { $0.toCKRecord(projectId: projectId) }
+
+        // Entities first, then scenes — scenes store entity IDs so order matters for consistency
+        for chunk in (entityRecords + sceneRecords).chunked(into: 400) {
+            try await save(chunk)
         }
     }
-}
 
-// MARK: - CKRecord → Model Mappers
+    // MARK: - Load
 
-private extension CloudStorageService {
+    func loadProjects() async throws -> [ProjectModel] {
+        let query   = CKQuery(recordType: CloudRecordType.projects, predicate: NSPredicate(value: true))
+        let records = try await fetchAll(query)
+        return records.compactMap { ProjectModel(ckRecord: $0) }
+    }
 
-    func mapProject(from record: CKRecord) throws -> CloudProject {
-        guard
-            let title       = record[ProjectField.title]       as? String,
-            let description = record[ProjectField.description] as? String,
-            let statusRaw   = record[ProjectField.status]      as? String,
-            let status      = ProjectStatus(rawValue: statusRaw),
-            let totalBudget = record[ProjectField.totalBudget] as? Double,
-            let createdAt   = record[ProjectField.createdAt]   as? Date,
-            let updatedAt   = record[ProjectField.updatedAt]   as? Date
-        else {
-            throw CloudStorageError.decodingFailed("Projects record has missing required fields.")
-        }
-        return CloudProject(
-            recordID:          record.recordID,
-            title:             title,
-            description:       description,
-            scriptFileURL:     (record[ProjectField.scriptFile]    as? CKAsset)?.fileURL,
-            breakdownFileURL:  (record[ProjectField.breakdownFile] as? CKAsset)?.fileURL,
-            status:            status,
-            totalBudget:       totalBudget,
-            createdAt:         createdAt,
-            updatedAt:         updatedAt
+    /// Loads a full ScriptBreakdown using 2 parallel queries.
+    func loadBreakdown(for projectId: String) async throws -> ScriptBreakdown {
+        let ref       = CKRecord.Reference(recordID: CKRecord.ID(recordName: projectId), action: .none)
+        let predicate = NSPredicate(format: "projectRef == %@", ref)
+
+        async let entityFetch = fetchAll(CKQuery(recordType: CloudRecordType.entities, predicate: predicate))
+        async let sceneFetch  = fetchAll(CKQuery(recordType: CloudRecordType.scenes,   predicate: predicate))
+
+        let (entityRecords, sceneRecords) = try await (entityFetch, sceneFetch)
+
+        // Build a typed lookup map from all entity records
+        let entityMap = buildEntityMap(from: entityRecords)
+
+        // Reconstruct scenes, resolving stored ID arrays against the map
+        let scenes = sceneRecords
+            .compactMap { SceneBreakdown(ckRecord: $0, entityMap: entityMap) }
+            .sorted { $0.number < $1.number }
+
+        return ScriptBreakdown(
+            scenes:          scenes,
+            totalCharacters: entityMap.allCharacters,
+            totalLocations:  entityMap.allLocations,
+            totalProps:      entityMap.allProps,
+            totalVehicles:   entityMap.allVehicles,
+            totalAnimals:    entityMap.allAnimals,
+            totalWardrobe:   entityMap.allWardrobe,
+            totalMakeup:     entityMap.allMakeup,
+            totalEquipment:  entityMap.allEquipment,
+            totalVFX:        [],    // VFX/SFX are stored as resolved name strings on scenes
+            totalSFX:        []
         )
     }
 
-    func mapProductionEntity(from record: CKRecord) throws -> CloudProductionEntity {
-        guard
-            let ref         = record[ProductionEntityField.project]     as? CKRecord.Reference,
-            let sourceID    = record[ProductionEntityField.sourceID]    as? String,
-            let name        = record[ProductionEntityField.name]        as? String,
-            let categoryRaw = record[ProductionEntityField.category]    as? String,
-            let detailsJSON = record[ProductionEntityField.detailsJSON] as? String,
-            let category    = CloudProductionEntity.EntityCategory(rawValue: categoryRaw)
-        else {
-            throw CloudStorageError.decodingFailed("ProductionEntities record has missing required fields.")
-        }
-        return CloudProductionEntity(
-            recordID:         record.recordID,
-            projectReference: ref,
-            sourceID:         sourceID,
-            name:             name,
-            category:         category,
-            detailsJSON:      detailsJSON
-        )
+    // MARK: - Update cost
+    //
+    // Direct fetch by recordID — no query needed.
+    // Called by BudgetView when the user edits a cost field.
+
+    func updateCost(_ cost: Double, entityId: String, projectId: String) async throws {
+        let recordID = CKRecord.ID(recordName: "\(projectId)_\(entityId)")
+        let record   = try await db.record(for: recordID)
+        record[EntityField.cost] = cost
+        try await save([record])
     }
 
-    func mapBudgetEntry(from record: CKRecord) throws -> CloudBudgetEntry {
-        guard
-            let projectRef = record[BudgetEntryField.project] as? CKRecord.Reference,
-            let entityRef  = record[BudgetEntryField.entity]  as? CKRecord.Reference,
-            let cost       = record[BudgetEntryField.cost]    as? Double
-        else {
-            throw CloudStorageError.decodingFailed("BudgetEntries record has missing required fields.")
-        }
-        return CloudBudgetEntry(
-            recordID:         record.recordID,
-            projectReference: projectRef,
-            entityReference:  entityRef,
-            cost:             cost,
-            notes:            record[BudgetEntryField.notes] as? String ?? ""
-        )
+    // MARK: - Update project status
+
+    func updateStatus(_ status: ProjectStatus, projectId: String) async throws {
+        let record = try await db.record(for: CKRecord.ID(recordName: projectId))
+        record[ProjectField.status] = status.rawValue
+        try await save([record])
     }
 
-    func mapScene(from record: CKRecord) throws -> CloudScene {
-        guard
-            let ref         = record[SceneField.project]     as? CKRecord.Reference,
-            let sourceID    = record[SceneField.sourceID]    as? String,
-            let sceneNumber = record[SceneField.sceneNumber] as? Int,
-            let heading     = record[SceneField.heading]     as? String,
-            let time        = record[SceneField.time]        as? String
-        else {
-            throw CloudStorageError.decodingFailed("Scene record has missing required fields.")
+    // MARK: - Delete
+    //
+    // Deleting the Projects record cascades automatically to all Entities and Scenes
+    // via their .deleteSelf projectRef references. No manual child cleanup needed.
+
+    func deleteProject(id: String) async throws {
+        try await db.deleteRecord(withID: CKRecord.ID(recordName: id))
+    }
+
+    // MARK: - Private: EntityMap builder
+
+    private func buildEntityMap(from records: [CKRecord]) -> EntityMap {
+        var map = EntityMap()
+        for record in records {
+            guard let type     = record[EntityField.entityType] as? String,
+                  let entityId = record[EntityField.entityId]   as? String
+            else { continue }
+
+            switch type {
+            case EntityType.character: map.characters[entityId] = CharacterBreakdown(ckRecord: record)
+            case EntityType.location:  map.locations[entityId]  = LocationBreakdown(ckRecord: record)
+            case EntityType.prop:      map.props[entityId]      = PropBreakdown(ckRecord: record)
+            case EntityType.vehicle:   map.vehicles[entityId]   = VehicleBreakdown(ckRecord: record)
+            case EntityType.animal:    map.animals[entityId]    = AnimalBreakdown(ckRecord: record)
+            case EntityType.wardrobe:  map.wardrobe[entityId]   = WardrobeBreakdown(ckRecord: record)
+            case EntityType.makeup:    map.makeup[entityId]     = MakeupBreakdown(ckRecord: record)
+            case EntityType.equipment: map.equipment[entityId]  = EquipmentBreakdown(ckRecord: record)
+            default: break
+            }
         }
-        return CloudScene(
-            recordID:          record.recordID,
-            projectReference:  ref,
-            sourceID:          sourceID,
-            sceneNumber:       sceneNumber,
-            heading:           heading,
-            time:              time,
-            locationReference: record[SceneField.location]         as? CKRecord.Reference,
-            castItems:         record[SceneField.castItems]         as? [CKRecord.Reference] ?? [],
-            productionItems:   record[SceneField.productionItems]   as? [CKRecord.Reference] ?? [],
-            postItems:         record[SceneField.postItems]         as? [CKRecord.Reference] ?? []
+        return map
+    }
+
+    // MARK: - Private: batch save
+
+    private func save(_ records: [CKRecord]) async throws {
+        guard !records.isEmpty else { return }
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            let op = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
+            op.savePolicy          = .changedKeys
+            op.isAtomic            = false
+            op.qualityOfService    = .userInitiated
+            op.modifyRecordsResultBlock = { result in
+                switch result {
+                case .success:          continuation.resume()
+                case .failure(let err): continuation.resume(throwing: err)
+                }
+            }
+            db.add(op)
+        }
+    }
+
+    // MARK: - Private: paginated fetch
+
+    private func fetchAll(_ query: CKQuery) async throws -> [CKRecord] {
+        var records: [CKRecord] = []
+        var cursor: CKQueryOperation.Cursor?
+
+        let (firstResults, firstCursor) = try await db.records(
+            matching: query,
+            resultsLimit: CKQueryOperation.maximumResults
         )
+        for (_, result) in firstResults {
+            if let record = try? result.get() { records.append(record) }
+        }
+        cursor = firstCursor
+
+        while let active = cursor {
+            let (nextResults, nextCursor) = try await db.records(continuingMatchFrom: active)
+            for (_, result) in nextResults {
+                if let record = try? result.get() { records.append(record) }
+            }
+            cursor = nextCursor
+        }
+
+        return records
     }
 }
 
-// MARK: - Helpers
+// MARK: - Array+chunked
 
-private extension CloudStorageService {
-
-    func makeAsset(from data: Data, name: String) throws -> CKAsset {
-        let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent(name)
-            .appendingPathExtension("dat")
-        do { try data.write(to: url) } catch { throw CloudStorageError.encodingFailed }
-        return CKAsset(fileURL: url)
+private extension Array {
+    func chunked(into size: Int) -> [[Element]] {
+        stride(from: 0, to: count, by: size).map {
+            Array(self[$0 ..< Swift.min($0 + size, count)])
+        }
     }
 }

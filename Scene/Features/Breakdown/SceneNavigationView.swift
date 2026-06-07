@@ -41,6 +41,6 @@ struct SceneNavigationView: View {
                 Image(systemName: "chevron.right")
             }
         }
-        .foregroundStyle(.white)
+      //  .foregroundStyle(.white)
     }
 }

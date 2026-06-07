@@ -19,11 +19,14 @@ struct CharacterRow: View {
             ) {
 
                 Text(character.name)
-                    .foregroundStyle(.white)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
 
-                Text(character.role)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+//                if let state = character.stateInScene.first {
+//                    Text(state.capitalized)
+//                        .font(.caption)
+//                        .foregroundStyle(.secondary)
+//                }
             }
 
             Spacer()

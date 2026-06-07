@@ -11,7 +11,6 @@ struct HomeView: View {
     @EnvironmentObject var settings: AppSettings
 
     @State private var isSidebarCollapsed = true
-    
     @State private var hoverProjects = false
 
     var body: some View {
@@ -41,33 +40,24 @@ struct HomeView: View {
                     .padding(.leading, 30)
                     .padding(.top, 30)
                     .overlay(alignment: .bottomLeading) {
-
-                        SettingsView(
-                            isExpanded: $homeVM.isSettingsExpanded
-                        )
-                        .padding(.bottom, 30)
-                        .padding(.leading, 30)
+                        SettingsView(isExpanded: $homeVM.isSettingsExpanded)
+                            .padding(.bottom, 30)
+                            .padding(.leading, 30)
                     }
+
                     VStack(alignment: .leading, spacing: 24) {
-
-                        headerView
-                            .padding(.top, 10)
-
+                        headerView.padding(.top, 10)
                         detailView
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding(.top, 30)
                     .padding(.horizontal, 30)
-                    
+
                     VStack {
                         Image("sceneLogo")
                             .padding(.top, 30)
                             .padding(.trailing, 30)
-
                         Spacer()
-                        //test
-//                        Text(authService.authState == .signedIn ? "✅ Signed in" : "❌ Not signed in")
-//                            .foregroundStyle(.white)
                     }
                 }
             }
@@ -80,25 +70,19 @@ struct HomeView: View {
                             homeVM.isSettingsExpanded = false
                         }
                     }
-                
-                SettingsViewModel(
-                    isExpanded: $homeVM.isSettingsExpanded
-                )
-                .environmentObject(settings)
-                .transition(.scale.combined(with: .opacity))
+                SettingsViewModel(isExpanded: $homeVM.isSettingsExpanded)
+                    .environmentObject(settings)
+                    .transition(.scale.combined(with: .opacity))
             }
-            
-            if homeVM.isCreateProjectExpanded {
 
+            if homeVM.isCreateProjectExpanded {
                 Color.black.opacity(0.35)
                     .ignoresSafeArea()
                     .onTapGesture {
-
                         withAnimation(.spring(duration: 0.25)) {
                             homeVM.isCreateProjectExpanded = false
                         }
                     }
-
                 CreateProjectPopUpView(
                     homeVM: homeVM,
                     isExpanded: $homeVM.isCreateProjectExpanded
@@ -107,62 +91,52 @@ struct HomeView: View {
             }
         }
         .animation(.spring(duration: 0.25), value: homeVM.isSettingsExpanded)
-        
+        // Fix 2: load projects from CloudKit on launch
+        .task {
+            await homeVM.loadProjects()
+        }
     }
 }
 
 extension HomeView {
+
     @ViewBuilder
-    private var detailView: some View{
-        switch homeVM.selectedSection{
+    private var detailView: some View {
+        switch homeVM.selectedSection {
         case .createProject:
             CreateProjectButtonView(homeVM: homeVM)
         case .projects:
-            
             ProjectsView(homeVM: homeVM)
         case .analysis:
             Text("Analysis View")
         case .breakdown:
-
             if let project = homeVM.selectedProject {
-                BreakdownView(project: project)
+                ProjectDetailView(project: project)
             }
         }
     }
 }
 
-
-
 extension HomeView {
-    
 
     @ViewBuilder
     private var headerView: some View {
-        
-
         switch homeVM.selectedSection {
 
         case .projects:
-            if homeVM.projects.isEmpty {
-            } else {
+            if !homeVM.projects.isEmpty {
                 HStack(spacing: 8) {
-                    
-                    Text("My Projects")
-                        .foregroundColor(.white)
-                    
+                    Text("My Projects").foregroundColor(.white)
                     Spacer()
                 }
             }
+
         case .breakdown:
-
             if let project = homeVM.selectedProject {
-
                 HStack(spacing: 8) {
-
                     Button {
                         homeVM.selectedSection = .projects
                         homeVM.selectedProject = nil
-
                     } label: {
                         Text("My Projects")
                             .foregroundColor(hoverProjects ? .white : .secondary)
@@ -170,12 +144,8 @@ extension HomeView {
                     .buttonStyle(.plain)
                     .onHover { hoverProjects = $0 }
 
-                    Image(systemName: "chevron.forward")
-                        .foregroundColor(.secondary)
-
-                    Text(project.title)
-                        .foregroundColor(.white)
-
+                    Image(systemName: "chevron.forward").foregroundColor(.secondary)
+                    Text(project.title).foregroundColor(.white)
                     Spacer()
                 }
             }

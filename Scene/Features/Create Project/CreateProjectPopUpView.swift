@@ -269,26 +269,26 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct CreateProjectPopUpView: View {
-
+    
     @ObservedObject var homeVM: HomeViewModel
-
+    
     @Binding var isExpanded: Bool
-
+    
     @State private var title = ""
     @State private var selectedGenre = "Drama"
     @State private var selectedScriptType: ScriptType = .film
     @State private var fileURL: URL?
     @State private var importingFile = false
-
+    
     // ADDED: tracks loading state while AI is working
     @State private var isAnalyzing = false
-
+    
     // ADDED: surfaces any error to the UI
     @State private var errorMessage: String? = nil
-
+    
     let genres = [ "Drama","Action","Comedy","Horror","Thriller","Suspense","Mystery","Crime","Sci-Fi","Fantasy","Historical","Biography","Romance", "Adventure","War","Psychological","Documentary","Family","Musical","Animation"
     ]
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack{
@@ -305,14 +305,14 @@ struct CreateProjectPopUpView: View {
                 }
                 .buttonStyle(.plain)
             }
-
+            
             HStack {
                 Text("Title")
                     .foregroundColor(.white)
                 TextField("Enter title", text: $title)
                     .textFieldStyle(.roundedBorder)
             }
-
+            
             HStack{
                 Picker("Select Genre", selection: $selectedGenre) {
                     ForEach(genres, id: \.self) { genre in
@@ -323,7 +323,7 @@ struct CreateProjectPopUpView: View {
                 .foregroundStyle(.white)
                 .tint(.white)
             }
-
+            
             HStack {
                 Picker("Production Type", selection: $selectedScriptType) {
                     ForEach(ScriptType.allCases, id: \.self) {
@@ -333,7 +333,7 @@ struct CreateProjectPopUpView: View {
                 .pickerStyle(.segmented)
                 .tint(.white)
             }
-
+            
             HStack{
                 Spacer()
                 if let fileURL {
@@ -342,7 +342,7 @@ struct CreateProjectPopUpView: View {
                 }
                 Spacer()
             }
-
+            
             HStack{
                 Spacer()
                 Button {
@@ -361,7 +361,7 @@ struct CreateProjectPopUpView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 50))
                 Spacer()
             }
-
+            
             HStack{
                 Spacer()
                 Text("Choose .docx / .txt Files")
@@ -369,9 +369,9 @@ struct CreateProjectPopUpView: View {
                     .foregroundColor(.gray)
                 Spacer()
             }
-
+            
             Spacer()
-
+            
             // ADDED: shows error message if something goes wrong
             if let errorMessage {
                 Text(errorMessage)
@@ -380,10 +380,10 @@ struct CreateProjectPopUpView: View {
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
             }
-
+            
             HStack {
                 Spacer()
-
+                
                 Button {
                     // ADDED: replaced dummy data with real AI pipeline
                     submitProject()
@@ -427,55 +427,64 @@ struct CreateProjectPopUpView: View {
             }
         }
     }
-
+    
     // ADDED: the real submit function —
     // reads the .docx via ZIPFoundation, sends text to GPT-4o,
     // builds the project from the real breakdown
     private func submitProject() {
         guard let fileURL else { return }
-
+        
         isAnalyzing  = true
         errorMessage = nil
-
+        
         Task {
             do {
-                // 1. Copy to a temp location so we can safely unzip it
+                // 1. Extract text
                 let tempURL = FileManager.default.temporaryDirectory
                     .appendingPathComponent(UUID().uuidString + ".docx")
-
+                
                 let accessed = fileURL.startAccessingSecurityScopedResource()
                 defer { if accessed { fileURL.stopAccessingSecurityScopedResource() } }
-
+                
                 try FileManager.default.copyItem(at: fileURL, to: tempURL)
                 defer { try? FileManager.default.removeItem(at: tempURL) }
-
-                // 2. Extract plain text from the .docx using ZIPFoundation
+                
                 let rawText = try ExtractText.extractText(from: tempURL)
                 let cleaned = rawText
                     .replacingOccurrences(of: "\n\n\n", with: "\n\n")
                     .trimmingCharacters(in: .whitespacesAndNewlines)
-
-                // 3. Send to GPT-4o and get back a ScreenplayBreakdown
-                let service  = AIService(ApiKey: Secrets.openAIKey)
-                let breakdown = try await service.analyze(screenplayText: cleaned).toScriptBreakdown()
-
-                // 4. Build the project — same as before, just with real breakdown
-                let project = ProjectModel(
-                    title: title,
-                    genre: selectedGenre,
+                
+                // 2. Build project metadata and save to CloudKit immediately
+                let cloudService = CloudStorageService()
+                var project = ProjectModel(
+                    id:         UUID().uuidString,
+                    title:      title,
+                    genre:      selectedGenre,
                     scriptType: selectedScriptType,
-                    fileURL: fileURL,
-                    breakdown: breakdown
+                    status:     .analyzing,
+                    createdAt:  Date(),
+                    fileURL:    fileURL
                 )
-
+                try await cloudService.saveProject(project)
+                
+                // 3. Analyze with AI
+                let aiBreakdown = try await AIService(ApiKey: Secrets.openAIKey)
+                    .analyze(screenplayText: cleaned)
+                let breakdown = aiBreakdown.toScriptBreakdown()
+                
+                // 4. Save breakdown to CloudKit, then mark project ready
+                try await cloudService.saveBreakdown(breakdown, for: project.id)
+                project.status = .ready
+                try await cloudService.saveProject(project)  // updates status field
+                
                 await MainActor.run {
                     homeVM.projects.append(project)
-                    homeVM.selectedProject  = project
-                    homeVM.selectedSection  = .breakdown
+                    homeVM.selectedProject = project
+                    homeVM.selectedSection = .breakdown
                     isAnalyzing = false
                     isExpanded  = false
                 }
-
+                
             } catch {
                 await MainActor.run {
                     errorMessage = error.localizedDescription
