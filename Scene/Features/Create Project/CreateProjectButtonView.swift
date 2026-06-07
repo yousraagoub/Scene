@@ -16,7 +16,7 @@ struct CreateProjectButtonView: View {
                 .scaledToFit()
                 .frame(width: 200)
 
-            Text("Create Your Project and Leave the rest for us.")
+            Text("Create Your Project and Leave the rest for us")
                 .multilineTextAlignment(.center)
                 .font(.largeTitle)
                 .foregroundColor(.white)

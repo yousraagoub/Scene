@@ -150,7 +150,7 @@ extension HomeView {
                 HStack(spacing: 8) {
                     
                     Text("My Projects")
-                        .font(.headline)
+                        .font(.title)
                         .foregroundColor(.white)
                     
                     Spacer()
@@ -168,7 +168,7 @@ extension HomeView {
 
                     } label: {
                         Text("My Projects")
-                            .font(.headline)
+                            .font(.title)
                             .foregroundColor(hoverProjects ? .white : .secondary)
                     }
                     .buttonStyle(.plain)
@@ -178,7 +178,7 @@ extension HomeView {
                         .foregroundColor(.secondary)
 
                     Text(project.title)
-                        .font(.headline)
+                        .font(.title)
                         .foregroundColor(.white)
 
                     Spacer()

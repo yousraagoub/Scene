@@ -9,28 +9,26 @@ struct ProjectsView: View {
         if homeVM.projects.isEmpty {
 
             VStack {
-
                 Spacer()
-
                 VStack(spacing: 20) {
-
                     HStack{
                         Spacer()
                         Image(systemName: "folder.badge.plus")
-                            .font(.system(size: 60))
-                            .foregroundStyle(.secondary)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 160)
                         Spacer()
                     }
 
                     HStack{
                         Spacer()
                         Text("No Projects Yet")
+                            .font(.largeTitle)
                             .multilineTextAlignment(.center)
-                            .foregroundStyle(.secondary)
                         Spacer()
                     }
                 }
-
+                .foregroundStyle(.secondary)
                 Spacer()
             }
 
@@ -38,7 +36,7 @@ struct ProjectsView: View {
 
             VStack(alignment: .leading, spacing: 16) {
 
-                ScrollView(.horizontal, showsIndicators: false) {
+                ScrollView(.vertical, showsIndicators: false) {
 
                     HStack(spacing: 12) {
 
@@ -65,7 +63,7 @@ struct ProjectsView: View {
                         }
                     }
                 }
-
+                .frame(maxWidth: .infinity, alignment: .leading)
                 Spacer()
             }
         }
@@ -85,12 +83,11 @@ struct FileCardView: View {
 
     var body: some View {
 
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 15) {
 
             HStack(alignment: .top) {
-
                 Text(project.title)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.title2)
                     .foregroundColor(.white)
 
                 Spacer()
@@ -98,17 +95,20 @@ struct FileCardView: View {
                 Image(
                     systemName: project.scriptType == .film ? "film" : "display"
                 )
-                .font(.system(size: 13))
+                .resizable()
+                .scaledToFit()
+                .frame(width: 16)
                 .foregroundColor(.white.opacity(0.7))
                 .padding(6)
                 .background(Color.white.opacity(0.15))
                 .clipShape(Circle())
             }
 
-            HStack(spacing: 4) {
+            HStack {
                 Text(project.genre)
-                    .font(.system(size: 10))
+                    .font(.title3)
                     .foregroundColor(.secondary)
+                    .padding(.top, 8)
             }
 
             Spacer()
@@ -116,18 +116,21 @@ struct FileCardView: View {
             HStack {
 
                 Image(systemName: "clock")
-                    .font(.system(size: 9))
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 16)
                     .foregroundColor(.secondary)
 
                 Text("Just now")
-                    .font(.system(size: 10))
+                    .font(.body)
                     .foregroundColor(.secondary)
 
                 Spacer()
             }
         }
-        .padding(14)
-        .frame(width: 205, height: 115)
+        .padding()
+        .frame(width: 255, alignment: .topLeading)
+        .fixedSize(horizontal: true, vertical: true)
         .background(
             Color(red: 0.137, green: 0.141, blue: 0.122)
         )
@@ -147,9 +150,10 @@ struct FileCardView: View {
                 showDeleteAlert = true   // ✅ بدل الحذف المباشر
             }) {
                 Image(systemName: "trash")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.body)
                     .foregroundColor(Color.primaryRed)
             }
+            .padding([.bottom,.trailing], 15)
             .buttonStyle(.plain)
             .opacity(hovered ? 1 : 0)
             .animation(.easeInOut(duration: 0.15), value: hovered)
