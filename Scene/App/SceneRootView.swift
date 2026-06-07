@@ -30,30 +30,7 @@ extension SceneRootView {
             }
             
         case .home:
-            BackgroundView{
-                HomeView()
-            }
-            
-        case .projects:
-            Text("Projects View")
-            
-        case .createProject:
-            BackgroundView {
-//                CreateProjectView(homeVM: homeVM)
-                Text("Create Project View - Temp")
-            }
-            
-        case .analysis:
-            Text("Analysis View")
-            
-        case .budget:
-            Text("Budget View")
-            
-        case .highlightedScript:
-            Text("Highlighted Script View")
-            
-        case .projectDetails:
-            Text("Project Details")
+            HomeView()
         }
     }
 }

@@ -21,9 +21,6 @@ struct BackgroundView<Content: View>: View {
                     .resizable()
                     .scaledToFit()
             }
-//            BackgroundGradients.primary
-            //                .ignoresSafeArea()
-            
             content
         }
     }

@@ -17,8 +17,22 @@ struct HomeView: View {
     var body: some View {
 
         ZStack {
+            if homeVM.selectedSection == .breakdown ||
+               homeVM.selectedSection == .analysis {
+                Color.appBackground.ignoresSafeArea()
+            } else {
+                
+                Color.appBackground.ignoresSafeArea()
+                VStack {
+                    Spacer()
+                    Image("gradientImg")
+                        .resizable()
+                        .scaledToFit()
+                }
+            }
+            
 
-            BackgroundView {
+//            BackgroundView {
 
                 HStack(alignment: .top, spacing: 0) {
 
@@ -72,7 +86,7 @@ struct HomeView: View {
                         Spacer()
                     }
                 }
-            }
+//            }
 
             if homeVM.isSettingsExpanded {
                 Color.black.opacity(0.35)
