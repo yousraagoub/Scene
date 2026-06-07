@@ -20,7 +20,7 @@ struct HomeView: View {
 
             BackgroundView {
 
-                HStack(spacing: 0) {
+                HStack(alignment: .top, spacing: 0) {
 
                     VStack(spacing: 0) {
 
@@ -33,7 +33,9 @@ struct HomeView: View {
                                 }
                             }
                         )
-                        .frame(width: isSidebarCollapsed ? 60 : 260, height: 218)
+                        .frame(width: isSidebarCollapsed ? 60 : 260)
+                        //Content-driven height.
+                        .fixedSize(horizontal: false, vertical: true)
                         .glassEffect(in: RoundedRectangle(cornerRadius: 30))
 
                         Spacer()
@@ -61,13 +63,13 @@ struct HomeView: View {
                     
                     VStack {
                         Image("sceneLogo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 34)
                             .padding(.top, 30)
                             .padding(.trailing, 30)
 
                         Spacer()
-                        //test
-//                        Text(authService.authState == .signedIn ? "✅ Signed in" : "❌ Not signed in")
-//                            .foregroundStyle(.white)
                     }
                 }
             }
@@ -148,6 +150,7 @@ extension HomeView {
                 HStack(spacing: 8) {
                     
                     Text("My Projects")
+                        .font(.headline)
                         .foregroundColor(.white)
                     
                     Spacer()
@@ -165,6 +168,7 @@ extension HomeView {
 
                     } label: {
                         Text("My Projects")
+                            .font(.headline)
                             .foregroundColor(hoverProjects ? .white : .secondary)
                     }
                     .buttonStyle(.plain)
@@ -174,6 +178,7 @@ extension HomeView {
                         .foregroundColor(.secondary)
 
                     Text(project.title)
+                        .font(.headline)
                         .foregroundColor(.white)
 
                     Spacer()

@@ -13,27 +13,25 @@ struct SidebarButton: View {
     let action: () -> Void
 
     var body: some View {
-
         Button(action: action) {
-            HStack(spacing: 14) {
-
+            HStack{
                 Image(systemName: item.systemImage)
-                    .font(.system(size: 12, weight: .semibold))
-                    
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 22, height: 22)
 
                 if !compact {
                     Text(item.title)
-                        .font(.system(size: 12,weight: .medium))
-                        
+                        .font(.title2)
+                        .fontWeight(.medium)
                 }
 
                 if !compact {
                     Spacer()
                 }
             }
-            .frame(maxWidth: .infinity)
             .foregroundStyle(isSelected ? .black : .white)
-            .padding()
+            .padding(10)
             .background(RoundedRectangle(cornerRadius:50)
             .fill(isSelected ? Color.white : Color.clear))
         }

@@ -10,15 +10,15 @@ struct CreateProjectButtonView: View {
     @ObservedObject var homeVM: HomeViewModel
 
     var body: some View {
-
-        VStack(spacing: 40) {
-
+        VStack(spacing: 50) {
             Image("createImg")
-                .frame(width: 202, height: 95)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 200)
 
-            Text("Create Your Project, and Leave the rest for us.")
-                .font(.headline)
-                .fontWeight(.medium)
+            Text("Create Your Project and Leave the rest for us.")
+                .multilineTextAlignment(.center)
+                .font(.largeTitle)
                 .foregroundColor(.white)
 
             Button {
@@ -28,19 +28,20 @@ struct CreateProjectButtonView: View {
                 }
 
             } label: {
-
-                Label("Create New Project",
-                      systemImage: "plus.circle.fill")
-                    .font(.system(size: 12))
-                    .padding()
-                    .frame(maxWidth: 190, maxHeight: 46)
+                Image(systemName: "plus.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 22, height: 22)
+                    .foregroundStyle(.black)
+                Text("Create New Project")
+                    .font(.title)
                     .foregroundStyle(.black)
             }
+            .padding()
             .buttonStyle(.plain)
             .background(.white)
             .clipShape(RoundedRectangle(cornerRadius: 50))
         }
-        .frame(width: 432, height: 284)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.bottom, 150)
     }

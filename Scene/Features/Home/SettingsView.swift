@@ -18,7 +18,9 @@ struct SettingsView: View {
         } label: {
             
             Image(systemName: "gearshape.fill")
-                .font(.system(size: 16))
+                .resizable()
+                .scaledToFit()
+                .frame(width: 22, height: 22)
                 .foregroundColor(.white)
                 .padding()
         }

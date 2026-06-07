@@ -13,29 +13,30 @@ struct SidebarView: View {
     let onToggle: () -> Void
 
     var body: some View {
-
-        VStack(spacing: 8) {
-
+        VStack {
             HStack {
                 if !compact {
                     HStack{
                         Image(systemName: "archivebox.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 22, height: 22)
                         Text("\(homeVM.projects.count)")
-                            
+                            .font(.title2)
                     }
-                    .font(.system(size: 16))
-                    .foregroundColor(.secondary)
-                    .padding(.leading, 14)
+                    .foregroundColor(.primaryRed)
                     Spacer()
                 }
                 Button(action: onToggle) {
-
                     Image(systemName: "sidebar.left")
-                        .font(.title3)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 22, height: 22)
                         .foregroundColor(.secondary)
                 }
                 .buttonStyle(.plain)
             }
+            .frame(width: 202, height: 22)
             .padding(.bottom,20)
 
             SidebarButton(
@@ -61,12 +62,7 @@ struct SidebarView: View {
             ) {
                 homeVM.selectedSection = .projects
             }
-
-            Spacer()
-
         }
-        
-        
         .padding()
     }
 }
