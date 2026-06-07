@@ -21,11 +21,12 @@ struct ProjectsView: View {
                             .foregroundStyle(.secondary)
                         Spacer()
                     }
+
                     HStack{
                         Spacer()
-                    Text("No Projects Yet")
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.secondary)
+                        Text("No Projects Yet")
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.secondary)
                         Spacer()
                     }
                 }
@@ -76,12 +77,11 @@ struct ProjectsView: View {
 struct FileCardView: View {
 
     let project: ProjectModel
-
     let onTap: () -> Void
-
     let onDelete: () -> Void
 
     @State private var hovered = false
+    @State private var showDeleteAlert = false   // ✅ جديد
 
     var body: some View {
 
@@ -96,10 +96,7 @@ struct FileCardView: View {
                 Spacer()
 
                 Image(
-                    systemName:
-                        project.scriptType == .film
-                        ? "film"
-                        : "display"
+                    systemName: project.scriptType == .film ? "film" : "display"
                 )
                 .font(.system(size: 13))
                 .foregroundColor(.white.opacity(0.7))
@@ -109,7 +106,6 @@ struct FileCardView: View {
             }
 
             HStack(spacing: 4) {
-
                 Text(project.genre)
                     .font(.system(size: 10))
                     .foregroundColor(.secondary)
@@ -133,81 +129,48 @@ struct FileCardView: View {
         .padding(14)
         .frame(width: 205, height: 115)
         .background(
-            Color(
-                red: 0.137,
-                green: 0.141,
-                blue: 0.122
-            )
+            Color(red: 0.137, green: 0.141, blue: 0.122)
         )
-        .clipShape(
-            RoundedRectangle(
-                cornerRadius: 14
-            )
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .strokeBorder(lineWidth: 2)
+                .foregroundStyle(.ultraThinMaterial)
         )
         .overlay(
-            RoundedRectangle(
-                cornerRadius: 14
-            )
-            .strokeBorder(
-                lineWidth: 2
-            )
-            .foregroundStyle(
-                .ultraThinMaterial
-            )
-        )
-        .overlay(
-            RoundedRectangle(
-                cornerRadius: 14
-            )
-            .stroke(
-                Color.white.opacity(0.15),
-                lineWidth: 1
-            )
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color.white.opacity(0.15), lineWidth: 1)
         )
         .overlay(alignment: .bottomTrailing) {
 
-            Button(action: onDelete) {
-
+            Button(action: {
+                showDeleteAlert = true   // ✅ بدل الحذف المباشر
+            }) {
                 Image(systemName: "trash")
-                    .font(
-                        .system(
-                            size: 11,
-                            weight: .medium
-                        )
-                    )
-                    .foregroundColor(
-                        Color.primaryRed
-                    )
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(Color.primaryRed)
             }
             .buttonStyle(.plain)
             .opacity(hovered ? 1 : 0)
-            .animation(
-                .easeInOut(
-                    duration: 0.15
-                ),
-                value: hovered
-            )
-            .offset(
-                x: -8,
-                y: -8
-            )
+            .animation(.easeInOut(duration: 0.15), value: hovered)
+            .offset(x: -8, y: -8)
         }
-        .scaleEffect(
-            hovered ? 1.02 : 1.0
-        )
-        .animation(
-            .spring(
-                response: 0.22,
-                dampingFraction: 0.7
-            ),
-            value: hovered
-        )
-        .onHover {
-            hovered = $0
-        }
-        .onTapGesture {
+        .scaleEffect(hovered ? 1.02 : 1.0)
+        .animation(.spring(response: 0.22, dampingFraction: 0.7), value: hovered)
+        .onHover { hovered = $0 }
+        .onTapGesture { onTap() }
 
-            onTap()
+        // 🔔 Alert تأكيد الحذف
+        .alert("Delete Project?", isPresented: $showDeleteAlert) {
+
+            Button("Delete", role: .destructive) {
+                onDelete()
+            }
+
+            Button("Cancel", role: .cancel) { }
+
+        } message: {
+            Text("Are you sure you want to delete this project? This action cannot be undone.")
         }
     }
 }
