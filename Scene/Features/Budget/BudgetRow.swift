@@ -7,14 +7,25 @@ import SwiftUI
 struct BudgetRow: View {
 
     let title: String
+    
+    let icon: String
+    
+    let color: Color
 
     @Binding var value: String
 
     var body: some View {
 
         HStack {
-
+            Image(systemName: icon)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 22)
+                .foregroundStyle(color)
+            
             Text(title)
+                .font(.title2)
+                .foregroundStyle(.white)
 
             Spacer()
 
@@ -22,16 +33,18 @@ struct BudgetRow: View {
                 "0",
                 text: $value
             )
-            .frame(width: 120)
+            .frame(height: 20, alignment: .topLeading)
+            .fixedSize(horizontal: true, vertical: false)
             .textFieldStyle(.roundedBorder)
         }
         .padding()
-        .background(
-            Color.white.opacity(0.04)
-        )
         .clipShape(
             RoundedRectangle(cornerRadius: 16)
         )
+        .glassEffect(
+            in: RoundedRectangle(cornerRadius: 16)
+        )
+        
     }
 }
 

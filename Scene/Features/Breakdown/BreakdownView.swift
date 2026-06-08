@@ -50,7 +50,7 @@ struct BreakdownView: View {
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .glassEffect( in: RoundedRectangle(cornerRadius: 8))
-                    .padding()
+//                    .padding()
                     
 //                    .overlay(
 //                        RoundedRectangle(cornerRadius: 8)
