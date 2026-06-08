@@ -12,30 +12,17 @@ struct CharacterRow: View {
     var body: some View {
 
         HStack {
-
-            VStack(
-                alignment: .leading,
-                spacing: 4
-            ) {
-
+            VStack(alignment: .leading, spacing: 4) {
                 Text(character.name)
+                    .font(.title2)
                     .foregroundStyle(.white)
-
-                Text(character.role)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
-
             Spacer()
         }
         .padding()
-        .background(
-            Color.white.opacity(0.04)
+        .glassEffect(
+            in: RoundedRectangle(cornerRadius: 16)
         )
-        .clipShape(
-            RoundedRectangle(
-                cornerRadius: 16
-            )
-        )
+        .shadow(color: Color.characterCard.opacity(0.3), radius: 4)
     }
 }

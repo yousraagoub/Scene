@@ -18,32 +18,56 @@ struct BreakdownView: View {
 
                 HStack {
 
-                    Picker(
-                        "",
-                        selection: $showBudget
-                    ) {
+                    HStack(spacing: 0) {
 
-                        Text("Breakdown")
-                            .tag(false)
+                        Button {
+                            withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
+                                showBudget = false
+                            }
+                        } label: {
+                            Text("Breakdown")
+                                .font(.title2)
+                                .frame(width: 120)
+                                .fixedSize(horizontal: true, vertical: true)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(showBudget == false ? .black : .white)
+                        .background(showBudget == false ? Color.white : Color.clear)
 
-                        Text("Budget")
-                            .tag(true)
+                        Button {
+                            withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
+                                showBudget = true
+                            }
+                        } label: {
+                            Text("Budget")
+                                .font(.title2)
+                                .frame(width: 120)
+                                .fixedSize(horizontal: true, vertical: true)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(showBudget == true ? .black : .white)
+                        .background(showBudget == true ? Color.white : Color.clear)
                     }
-                    .pickerStyle(.segmented)
-                    .tint(.white)
-                    .padding(.bottom, 10)
-//                    .frame(width: 240)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .glassEffect( in: RoundedRectangle(cornerRadius: 8))
+                    .padding()
+                    
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: 8)
+//                            .stroke(.white.opacity(0.1))
+//                    )
+//                    .glassEffect( in: RoundedRectangle(cornerRadius: 8))
 
                     Spacer()
 
                     if !showBudget {
-
                         SceneNavigationView(
                             sceneIndex: $selectedSceneIndex,
                             totalScenes: breakdown.scenes.count
                         )
                     }
                 }
+                .padding(.bottom, 10)
 
                 // MARK: - Content
 
@@ -108,9 +132,9 @@ extension BreakdownView {
                         scene: scene
                     )
 
-                    visualEffectsSection(
-                        scene: scene
-                    )
+//                    visualEffectsSection(
+//                        scene: scene
+//                    )
                 }
             }
         }
@@ -127,23 +151,24 @@ extension BreakdownView {
     ) -> some View {
 
         HStack(spacing: 20) {
-
             SummaryCard(
-                title: "Characters",
-                count: scene.characters.count,
-                icon: "person.3.fill"
+                title: "Total Scenes",
+                count: project.breakdown!.scenes.count,
+                icon: "film.stack.fill",
+                color: .sceneCard
+            )
+            SummaryCard(
+                title: "Total Characters",
+                count: project.breakdown!.totalCharacters.count,
+                icon: "person.2.fill",
+                color: .characterCard
             )
 
             SummaryCard(
-                title: "Locations",
-                count: scene.locations.count,
-                icon: "mappin.and.ellipse"
-            )
-
-            SummaryCard(
-                title: "Props",
-                count: scene.props.count,
-                icon: "shippingbox.fill"
+                title: "Total Locations",
+                count: project.breakdown!.totalLocations.count,
+                icon: "mappin.and.ellipse",
+                color: .locatioinCard
             )
         }
     }
@@ -155,7 +180,8 @@ extension BreakdownView {
 
         BreakdownSectionCard(
             title: "Characters",
-            icon: "person.3.fill"
+            icon: "person.2.fill",
+            color: Color.characterCard
         ) {
 
             ForEach(scene.characters) {
@@ -171,7 +197,8 @@ extension BreakdownView {
 
         BreakdownSectionCard(
             title: "Locations",
-            icon: "mappin.and.ellipse"
+            icon: "mappin.and.ellipse",
+            color: Color.locatioinCard
         ) {
 
             ForEach(scene.locations) {
@@ -187,7 +214,8 @@ extension BreakdownView {
 
         BreakdownSectionCard(
             title: "Props",
-            icon: "shippingbox.fill"
+            icon: "shippingbox.fill",
+            color: Color.propsCard
         ) {
 
             ForEach(scene.props) {
@@ -196,36 +224,37 @@ extension BreakdownView {
         }
     }
 
-    @ViewBuilder
-    func visualEffectsSection(
-        scene: SceneBreakdown
-    ) -> some View {
-
-        BreakdownSectionCard(
-            title: "Visual Effects",
-            icon: "sparkles"
-        ) {
-
-            ForEach(
-                scene.visualEffects,
-                id: \.self
-            ) { effect in
-
-                Text(effect)
-                    .padding()
-                    .frame(
-                        maxWidth: .infinity,
-                        alignment: .leading
-                    )
-                    .background(
-                        Color.white.opacity(0.04)
-                    )
-                    .clipShape(
-                        RoundedRectangle(
-                            cornerRadius: 16
-                        )
-                    )
-            }
-        }
-    }
+//    @ViewBuilder
+//    func visualEffectsSection(
+//        scene: SceneBreakdown
+//    ) -> some View {
+//
+//        BreakdownSectionCard(
+//            title: "Visual Effects",
+//            icon: "sparkles",
+//            color: Color.vfxCard
+//        ) {
+//
+//            ForEach(
+//                scene.visualEffects,
+//                id: \.self
+//            ) { effect in
+//
+//                Text(effect)
+//                    .padding()
+//                    .frame(
+//                        maxWidth: .infinity,
+//                        alignment: .leading
+//                    )
+//                    .background(
+//                        Color.white.opacity(0.04)
+//                    )
+//                    .clipShape(
+//                        RoundedRectangle(
+//                            cornerRadius: 16
+//                        )
+//                    )
+//            }
+//        }
+//    }
 }

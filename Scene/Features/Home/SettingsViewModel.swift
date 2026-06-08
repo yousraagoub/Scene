@@ -82,7 +82,7 @@ struct SettingsViewModel: View {
                     }
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay(RoundedRectangle(cornerRadius: 8).stroke(.white.opacity(0.3)))
+                .glassEffect( in: RoundedRectangle(cornerRadius: 8))
             }
 
         }

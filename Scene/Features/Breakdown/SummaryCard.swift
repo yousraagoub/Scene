@@ -11,26 +11,34 @@ struct SummaryCard: View {
     let count: Int
 
     let icon: String
+    
+    let color: Color
 
     var body: some View {
 
         VStack(alignment: .leading) {
 
             HStack {
-
-                Label(title, systemImage: icon)
-                    .foregroundStyle(.secondary)
-
+                Image(systemName: icon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50)
+                    .foregroundStyle(Color(color))
+                    
+                Text(title)
+                    .font(.largeTitle)
+                    .foregroundStyle(Color(color))
+                
+                Text("\(count)")
+                    .font(.largeTitle)
+                    .foregroundStyle(Color(color))
                 Spacer()
             }
+            .padding()
 
-            Spacer()
-
-            Text("\(count)")
-                .font(.system(size: 42, weight: .bold))
-                .foregroundStyle(.white)
+            
         }
-        .padding(20)
+        .padding()
         .frame(height: 150)
         .glassEffect(
             in: RoundedRectangle(cornerRadius: 24)

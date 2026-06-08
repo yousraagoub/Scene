@@ -22,13 +22,16 @@ struct SceneNavigationView: View {
 
             } label: {
 
-                Image(systemName: "chevron.left")
+                Image(systemName: "chevron.backward")
             }
+            .buttonStyle(.plain)
+            .disabled(sceneIndex == 0)
+
 
             Text(
-                "\(sceneIndex + 1) / \(totalScenes) Scene"
+                "\(sceneIndex + 1) out of \(totalScenes)"
             )
-            .font(.headline)
+            .font(.title2)
 
             Button {
 
@@ -38,8 +41,11 @@ struct SceneNavigationView: View {
 
             } label: {
 
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
             }
+            .buttonStyle(.plain)
+            .disabled(sceneIndex == totalScenes - 1)
+
         }
         .foregroundStyle(.white)
     }

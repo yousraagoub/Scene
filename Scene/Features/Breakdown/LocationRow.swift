@@ -19,23 +19,20 @@ struct LocationRow: View {
             ) {
 
                 Text(location.name)
+                    .font(.title2)
                     .foregroundStyle(.white)
-
-                Text(location.type)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+//
+//                Text(location.type)
+//                    .font(.caption)
+//                    .foregroundStyle(.secondary)
             }
 
             Spacer()
         }
         .padding()
-        .background(
-            Color.white.opacity(0.04)
+        .glassEffect(
+            in: RoundedRectangle(cornerRadius: 16)
         )
-        .clipShape(
-            RoundedRectangle(
-                cornerRadius: 16
-            )
-        )
+        .shadow(color: Color.locatioinCard.opacity(0.3), radius: 4)
     }
 }
