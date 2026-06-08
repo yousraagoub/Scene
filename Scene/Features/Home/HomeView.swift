@@ -127,7 +127,7 @@ extension HomeView {
             if !homeVM.projects.isEmpty {
                 HStack(spacing: 8) {
                     Text("My Projects").foregroundColor(.white)
-                    Spacer()
+                   // Spacer()
                 }
             }
 
@@ -146,7 +146,7 @@ extension HomeView {
 
                     Image(systemName: "chevron.forward").foregroundColor(.secondary)
                     Text(project.title).foregroundColor(.white)
-                    Spacer()
+                  //  Spacer()
                 }
             }
 
