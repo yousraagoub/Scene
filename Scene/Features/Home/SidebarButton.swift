@@ -21,7 +21,7 @@ struct SidebarButton: View {
                     .frame(width: 22, height: 22)
 
                 if !compact {
-                    Text(item.title)
+                    Text(LocalizedStringKey(item.title))
                         .font(.title2)
                         .fontWeight(.medium)
                 }

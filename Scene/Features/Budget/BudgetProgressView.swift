@@ -46,7 +46,7 @@ struct BudgetProgressView: View {
                         .bold()
                         .foregroundStyle(.white)
 
-                    Text("of \(totalItems)")
+                    Text(String(localized:"of \(totalItems)"))
                         .font(.title2)
                         .foregroundStyle(.secondary)
                 }

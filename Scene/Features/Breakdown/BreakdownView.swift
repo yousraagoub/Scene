@@ -152,20 +152,20 @@ extension BreakdownView {
 
         HStack(spacing: 20) {
             SummaryCard(
-                title: "Total Scenes",
+                title: String(localized:"Total Scenes"),
                 count: project.breakdown!.scenes.count,
                 icon: "film.stack.fill",
                 color: .sceneCard
             )
             SummaryCard(
-                title: "Total Characters",
+                title: String(localized: "Total Characters"),
                 count: project.breakdown!.totalCharacters.count,
                 icon: "person.2.fill",
                 color: .characterCard
             )
 
             SummaryCard(
-                title: "Total Locations",
+                title: String(localized: "Total Locations"),
                 count: project.breakdown!.totalLocations.count,
                 icon: "mappin.and.ellipse",
                 color: .locatioinCard
@@ -179,7 +179,7 @@ extension BreakdownView {
     ) -> some View {
 
         BreakdownSectionCard(
-            title: "Characters",
+            title: String(localized:"Characters"),
             icon: "person.2.fill",
             color: Color.characterCard
         ) {
@@ -196,7 +196,7 @@ extension BreakdownView {
     ) -> some View {
 
         BreakdownSectionCard(
-            title: "Locations",
+            title: String(localized: "Locations"),
             icon: "mappin.and.ellipse",
             color: Color.locatioinCard
         ) {
@@ -213,7 +213,7 @@ extension BreakdownView {
     ) -> some View {
 
         BreakdownSectionCard(
-            title: "Props",
+            title: String(localized: "Props"),
             icon: "shippingbox.fill",
             color: Color.propsCard
         ) {

@@ -9,7 +9,7 @@ import Combine
 final class AppSettings: ObservableObject {
 
     @Published var language: AppLanguage = .english
-    @Published var userName: String = "User Name"   // ✅ ADDED
+    @Published var userName: String = String(localized:"User Name")  // ✅ ADDED
 
     var layoutDirection: LayoutDirection {
         language == .arabic ? .rightToLeft : .leftToRight

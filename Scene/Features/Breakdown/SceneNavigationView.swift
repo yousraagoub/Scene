@@ -29,7 +29,7 @@ struct SceneNavigationView: View {
 
 
             Text(
-                "\(sceneIndex + 1) out of \(totalScenes)"
+                String(localized:"\(sceneIndex + 1) out of \(totalScenes)")
             )
             .font(.title2)
 

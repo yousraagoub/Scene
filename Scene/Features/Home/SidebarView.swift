@@ -41,7 +41,7 @@ struct SidebarView: View {
 
             SidebarButton(
                 item: SidebarItem(
-                    title: "Create New Project",
+                    title: String(localized: "Create New Project"),
                     systemImage: "plus.circle.fill"
                 ),
                 isSelected:
@@ -53,7 +53,7 @@ struct SidebarView: View {
 
             SidebarButton(
                 item: SidebarItem(
-                    title: "My Projects",
+                    title: String(localized: "My Projects"),
                     systemImage: "archivebox.circle.fill"
                 ),
                 isSelected:

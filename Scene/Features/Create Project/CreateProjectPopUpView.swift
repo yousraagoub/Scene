@@ -24,7 +24,25 @@ struct CreateProjectPopUpView: View {
     // ADDED: surfaces any error to the UI
     @State private var errorMessage: String? = nil
 
-    let genres = [ "Drama","Action","Comedy","Horror","Thriller","Suspense","Mystery","Crime","Sci-Fi","Fantasy","Historical","Biography","Romance", "Adventure","War","Psychological","Documentary","Family","Musical","Animation"
+    let genres = [ String(localized:"Drama"),
+                   String(localized:"Action"),
+                   String(localized: "Comedy"),
+                   String(localized:"Horror"),
+                   String(localized: "Thriller"),
+                   String(localized: "Suspense"),
+                   String(localized: "Mystery"),
+                   String(localized: "Crime"),
+                   String(localized:"Sci-Fi"),
+                   String(localized:"Fantasy"),
+                   String(localized:"Historical"),
+                   String(localized:"Biography"),
+                   String(localized: "Romance"),
+                   String(localized: "Adventure"),
+                   String(localized:"War"),
+                   String(localized:"Psychological"),String(localized:"Documentary"),
+                   String(localized: "Family"),
+                   String(localized: "Musical"),
+                   String(localized:"Animation")
     ]
 
     var body: some View {
