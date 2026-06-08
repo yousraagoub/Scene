@@ -10,25 +10,29 @@ enum OnboardingData {
 
         .init(
             title: "Welcome to Scene",
-            subtitle: "Your creative workspace for filmmaking, production, and storytelling.",
+            titleA: "مرحباً بك في سين",
+            subtitle: "",
             image: "sceneLogo"
         ),
 
         .init(
-            title: "Organize Your Projects",
-            subtitle: "Manage scripts, budgets, storyboards, and production workflows in one place.",
+            title: "Upload Your Script",
+            titleA: "إرفع نص السيناريو",
+            subtitle: "",
             image: "sceneLogo"
         ),
 
         .init(
-            title: "Collaborate Seamlessly",
-            subtitle: "Work with your creative team and keep everything synchronized.",
+            title: "Get The Results",
+            titleA: "احصل على النتيجة",
+            subtitle: "",
             image: "sceneLogo"
         ),
 
         .init(
             title: "Ready to Begin",
-            subtitle: "Set up your workspace and start building your next production.",
+            titleA: "مستعد للبدء",
+            subtitle: "",
             image: "sceneLogo"
         )
     ]
