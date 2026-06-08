@@ -14,16 +14,13 @@ struct BackgroundView<Content: View>: View {
 
     var body: some View {
         ZStack {
-//            Color.appBackground.ignoresSafeArea()
-//            VStack {
-//                Spacer()
-//                Image("gradientImg")
-//                    .resizable()
-//                    .scaledToFit()
-//            }
-            BackgroundGradients.primary
-                .ignoresSafeArea()
-            
+            Color.appBackground.ignoresSafeArea()
+            VStack {
+                Spacer()
+                Image("gradientImg")
+                    .resizable()
+                    .scaledToFit()
+            }
             content
         }
     }

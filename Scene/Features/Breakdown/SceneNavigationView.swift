@@ -2,6 +2,7 @@
 //  SceneNavigationView.swift
 //  Scene
 //
+
 import SwiftUI
 
 struct SceneNavigationView: View {
@@ -24,11 +25,14 @@ struct SceneNavigationView: View {
 
                 Image(systemName: "chevron.backward")
             }
+            .buttonStyle(.plain)
+            .disabled(sceneIndex == 0)
+
 
             Text(
-                "\(sceneIndex + 1) / \(totalScenes) Scene"
+                String(localized:"\(sceneIndex + 1) out of \(totalScenes)")
             )
-            .font(.headline)
+            .font(.title2)
 
             Button {
 
@@ -40,8 +44,10 @@ struct SceneNavigationView: View {
 
                 Image(systemName: "chevron.forward")
             }
-            .labelStyle(.iconOnly)
+            .buttonStyle(.plain)
+            .disabled(sceneIndex == totalScenes - 1)
+
         }
-      //  .foregroundStyle(.white)
+        .foregroundStyle(.white)
     }
 }
