@@ -323,23 +323,82 @@ struct ChipGrid: View {
     var color: Color = .white
 
     var body: some View {
-        LazyVGrid(
-            columns: [GridItem(.adaptive(minimum: 64), spacing: 4)],
-            alignment: .leading,
-            spacing: 6
-        ) {
+        FlowLayout(spacing: 6) {
             ForEach(items, id: \.self) { item in
                 Text(item)
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(color.opacity(0.8))
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .minimumScaleFactor(0.4)
-                    .lineLimit(1)
                     .background(color.opacity(0.12))
                     .clipShape(Capsule())
             }
         }
+    }
+}
+
+// MARK: - Flow Layout
+
+struct FlowLayout: Layout {
+    let spacing: CGFloat
+    
+    init(spacing: CGFloat = 8) {
+        self.spacing = spacing
+    }
+    
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let result = FlowResult(
+            in: proposal.replacingUnspecifiedDimensions().width,
+            subviews: subviews,
+            spacing: spacing
+        )
+        return result.bounds
+    }
+    
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let result = FlowResult(
+            in: proposal.replacingUnspecifiedDimensions().width,
+            subviews: subviews,
+            spacing: spacing
+        )
+        for (index, subview) in subviews.enumerated() {
+            let frameOrigin = result.frames[index].origin
+            let placementPoint = CGPoint(
+                x: frameOrigin.x + bounds.origin.x,
+                y: frameOrigin.y + bounds.origin.y
+            )
+            subview.place(at: placementPoint, proposal: .unspecified)
+        }
+    }
+}
+
+struct FlowResult {
+    var frames: [CGRect] = []
+    var bounds: CGSize = .zero
+    
+    init(in maxWidth: CGFloat, subviews: LayoutSubviews, spacing: CGFloat) {
+        var origin = CGPoint.zero
+        var rowHeight: CGFloat = 0
+        
+        for subview in subviews {
+            let size = subview.sizeThatFits(.unspecified)
+            
+            if origin.x + size.width > maxWidth && origin.x > 0 {
+                // Start new row
+                origin.x = 0
+                origin.y += rowHeight + spacing
+                rowHeight = 0
+            }
+            
+            let frame = CGRect(origin: origin, size: size)
+            frames.append(frame)
+            
+            origin.x += size.width + spacing
+            rowHeight = max(rowHeight, size.height)
+            bounds.width = max(bounds.width, frame.maxX)
+        }
+        
+        bounds.height = origin.y + rowHeight
     }
 }
 
