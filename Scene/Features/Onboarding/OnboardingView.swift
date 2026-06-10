@@ -7,6 +7,7 @@ import SwiftUI
 struct OnboardingView: View {
     
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var authService: CloudAuthService
     
     @State private var currentPage = 0
     
@@ -44,8 +45,18 @@ struct OnboardingView: View {
                                 
                             } else {
                 
-                                appState.isFirstLaunch = false
-                                appState.navigate(to: .home)
+                                Task {
+                                    appState.completeOnboarding()
+                                    await authService.checkAuth()
+                                    
+                                    if authService.isSignedIn {
+                                        appState.navigate(to: .home)
+                                    } else {
+                                        // Handle unauthenticated state
+                                        // For now, staying on onboarding or could show auth prompt
+                                        appState.navigate(to: .onboarding)
+                                    }
+                                }
                             }
                             
                         } label: {
@@ -118,4 +129,5 @@ struct OnboardingView: View {
     
     OnboardingView()
         .environmentObject(AppState())
+        .environmentObject(CloudAuthService())
 }

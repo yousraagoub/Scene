@@ -334,7 +334,7 @@ struct ChipGrid: View {
                     .foregroundStyle(color.opacity(0.8))
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(0.4)
                     .lineLimit(1)
                     .background(color.opacity(0.12))
                     .clipShape(Capsule())

@@ -200,6 +200,16 @@ struct BudgetItemRow: View {
     var onCostChange: (String, Double) -> Void = { _, _ in }
  
     @State private var text = ""
+    
+    // Number formatter for validation
+    private let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.allowsFloats = true
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }()
  
     var body: some View {
         HStack {
@@ -213,11 +223,22 @@ struct BudgetItemRow: View {
                     .scaledToFit()
                     .frame(width: 14, height: 14)
                     .foregroundStyle(.secondary)
-                TextField("0", text: $text)
+                TextField("0", text: $text )
                     .multilineTextAlignment(.trailing)
                     .frame(width: 90)
                     .onChange(of: text) { _, newValue in
-                        let newCost = Double(newValue) ?? 0
+                        // Filter to only allow numbers and decimal point
+                        let filtered = newValue.filter { "0123456789.".contains($0) }
+                        
+                        // Prevent multiple decimal points
+                        let components = filtered.components(separatedBy: ".")
+                        let finalText = components.count > 2 ? components[0] + "." + components[1] : filtered
+                        
+                        if finalText != newValue {
+                            text = finalText
+                        }
+                        
+                        let newCost = Double(finalText) ?? 0
                         cost = newCost
                         onCostChange(entityId, newCost)
                     }

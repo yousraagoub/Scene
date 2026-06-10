@@ -30,7 +30,7 @@ final class AIService {
                 request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-                let body: [String: Any] = [
+                let _: [String: Any] = [
                     "model": "gpt-4o",
                     "messages": [
                         [
