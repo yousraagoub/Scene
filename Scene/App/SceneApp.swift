@@ -27,6 +27,7 @@ struct SceneApp: App {
     var body: some SwiftUI.Scene {
         WindowGroup {
             SceneRootView()
+                .preferredColorScheme(.dark)
                 .environmentObject(appState)
                 .environmentObject(settings)
                 .environmentObject(authService)
