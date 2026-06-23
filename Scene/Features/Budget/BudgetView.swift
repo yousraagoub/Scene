@@ -90,13 +90,10 @@ struct BudgetView: View {
 
             // MARK: - Right: Progress Summary
             VStack{
-             //   Spacer()
-                BudgetProgressView(
-                    completedItems: completedItems,
-                    totalItems: totalEntityCount,
-                    totalBudget: breakdown.totalBudget
+                BudgetDonutChartView(
+                    breakdown: breakdown
                 )
-                .frame(maxWidth: 480)
+                .frame(maxWidth: 580)
                 Spacer()
             }
             Spacer()
@@ -135,15 +132,15 @@ struct BudgetView: View {
 
     private func iconColor(for icon: String) -> Color {
         switch icon {
-        case "person.3.fill":  return .indigo.opacity(0.7)
-        case "location.fill":  return .cyan.opacity(0.7)
-        case "shippingbox.fill": return .orange.opacity(0.7)
-        case "car.fill":       return .blue.opacity(0.7)
-        case "hare.fill":      return .green.opacity(0.7)
-        case "tshirt.fill":    return .pink.opacity(0.7)
-        case "paintbrush.fill": return .red.opacity(0.7)
-        case "camera.fill":    return .yellow.opacity(0.7)
-        default:               return .secondary.opacity(0.7)
+        case "person.3.fill":  return .indigo
+        case "location.fill":  return .cyan
+        case "shippingbox.fill": return .orange
+        case "car.fill":       return .blue
+        case "hare.fill":      return .green
+        case "tshirt.fill":    return .pink
+        case "paintbrush.fill": return .red
+        case "camera.fill":    return .yellow
+        default:               return .secondary
         }
     }
 
@@ -163,15 +160,18 @@ struct BudgetView: View {
 
                 HStack(spacing: 8) {
                     Image(systemName: icon)
-                        .font(.system(size: 13, weight: .semibold))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 17, height: 17)
                         .foregroundStyle(iconColor(for: icon))
+                        .shadow(color: iconColor(for: icon), radius: 20)
                     Text(title)
-                        .font(.subheadline)
+                        .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
                     Spacer()
                     Text("\(indices.count) item\(indices.count == 1 ? "" : "s")")
-                        .font(.caption)
+                        .font(.title2)
                         .foregroundStyle(.tertiary)
                 }
                 .padding(.horizontal, 4)
@@ -193,13 +193,14 @@ struct BudgetView: View {
 
 // MARK: - BudgetItemRow
 struct BudgetItemRow: View {
- 
+    
     let entityId: String
     let name: String
     @Binding var cost: Double
     var onCostChange: (String, Double) -> Void = { _, _ in }
- 
+    
     @State private var text = ""
+    @State private var showSaved = false
     
     // Number formatter for validation
     private let numberFormatter: NumberFormatter = {
@@ -210,46 +211,183 @@ struct BudgetItemRow: View {
         formatter.maximumFractionDigits = 2
         return formatter
     }()
- 
+    
     var body: some View {
         HStack {
             Text(name)
-                .font(.subheadline)
+                .font(.title3)
                 .foregroundStyle(.white)
+            
             Spacer()
+            
+            if showSaved {
+                Text("Saved")
+                    .font(.caption)
+                    .foregroundStyle(.green)
+                    .transition(.opacity)
+            }
+            
             HStack(spacing: 4) {
-                Image("riyalSign")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 14, height: 14)
-                    .foregroundStyle(.secondary)
-                TextField("0", text: $text )
+                TextField("0", text: $text)
                     .multilineTextAlignment(.trailing)
+                    .font(.title2)
                     .frame(width: 90)
                     .onChange(of: text) { _, newValue in
+                        
                         // Filter to only allow numbers and decimal point
-                        let filtered = newValue.filter { "0123456789.".contains($0) }
+                        let filtered = newValue.filter {
+                            "0123456789.".contains($0)
+                        }
                         
                         // Prevent multiple decimal points
                         let components = filtered.components(separatedBy: ".")
-                        let finalText = components.count > 2 ? components[0] + "." + components[1] : filtered
+                        
+                        let finalText = components.count > 2
+                        ? components[0] + "." + components[1]
+                        : filtered
                         
                         if finalText != newValue {
                             text = finalText
                         }
                         
                         let newCost = Double(finalText) ?? 0
+                        
                         cost = newCost
                         onCostChange(entityId, newCost)
+                        
+                        // MARK: Saved feedback
+                        
+                        withAnimation {
+                            showSaved = true
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            withAnimation {
+                                showSaved = false
+                            }
+                        }
                     }
+                
+                Image("riyalSign")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 17, height: 17)
+                    .foregroundStyle(.secondary)
             }
         }
-        .padding(.horizontal, 14)
+        .padding(.horizontal, 17)
         .padding(.vertical, 10)
-        .background(Color.white.opacity(0.04))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .glassEffect(in: RoundedRectangle(cornerRadius: 20))
+        .shadow(color: .gray.opacity(0.2), radius: 1)
         .onAppear {
             text = cost == 0 ? "" : String(cost)
         }
+    }
+}
+
+
+//MARK: For Preview Only.
+#Preview {
+    PreviewBudgetView()
+}
+
+private struct PreviewBudgetView: View {
+
+    @State private var breakdown = ScriptBreakdown(
+        scenes: [],
+        totalCharacters: [
+            CharacterBreakdown(
+                id: "char_001",
+                name: "Sarah",
+                aliases: [],
+                cost: 3500
+            ),
+            CharacterBreakdown(
+                id: "char_002",
+                name: "Omar",
+                aliases: [],
+                cost: 2200
+            )
+        ],
+        totalLocations: [
+            LocationBreakdown(
+                id: "loc_001",
+                name: "Coffee Shop",
+                type: "Interior",
+                cost: 1500
+            ),
+            LocationBreakdown(
+                id: "loc_002",
+                name: "Rooftop",
+                type: "Exterior",
+                cost: 2000
+            )
+        ],
+        totalProps: [
+            PropBreakdown(
+                id: "prop_001",
+                name: "Laptop",
+                category: "Electronics",
+                cost: 800
+            ),
+            PropBreakdown(
+                id: "prop_002",
+                name: "Notebook",
+                category: "Stationery",
+                cost: 100
+            )
+        ],
+        totalVehicles: [
+            VehicleBreakdown(
+                id: "veh_001",
+                name: "Toyota Camry",
+                type: "Car",
+                cost: 500
+            )
+        ],
+        totalAnimals: [
+            AnimalBreakdown(
+                id: "ani_001",
+                name: "Golden Retriever",
+                cost: 300
+            )
+        ],
+        totalWardrobe: [
+            WardrobeBreakdown(
+                id: "war_001",
+                name: "Police Uniform",
+                cost: 400
+            )
+        ],
+        totalMakeup: [
+            MakeupBreakdown(
+                id: "make_001",
+                name: "Special Effects Makeup",
+                cost: 650
+            )
+        ],
+        totalEquipment: [
+            EquipmentBreakdown(
+                id: "eq_001",
+                name: "Sony FX3",
+                department: "Camera",
+                cost: 4500
+            ),
+            EquipmentBreakdown(
+                id: "eq_002",
+                name: "Boom Microphone",
+                department: "Sound",
+                cost: 900
+            )
+        ],
+        totalVFX: [],
+        totalSFX: []
+    )
+
+    var body: some View {
+        BudgetView(breakdown: $breakdown)
+            .frame(width: 1400, height: 900)
+            .padding()
+            .preferredColorScheme(.dark)
     }
 }
