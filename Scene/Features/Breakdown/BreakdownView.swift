@@ -1,31 +1,23 @@
 import SwiftUI
 
 struct BreakdownView: View {
-
     @Binding var breakdown: ScriptBreakdown
     var onCostChange: (String, Double) -> Void = { _, _ in }
-
     @State private var selectedSceneIndex = 0
     @State private var showBudget = false
     @AppStorage("userName") private var userName: String = ""
 
     var body: some View {
-
         VStack(spacing: 16) {
-
             // MARK: - Top Bar
-
             HStack {
-
                 if !showBudget {
                     SceneNavigationView(
                         sceneIndex: $selectedSceneIndex,
                         totalScenes: breakdown.scenes.count
                     )
                 }
-
                 Spacer()
-
                 Picker("", selection: $showBudget) {
                     Text("Breakdown").tag(false)
                     Text("Budget").tag(true)
@@ -45,18 +37,13 @@ struct BreakdownView: View {
 }
 
 // MARK: - Breakdown Content
-
 extension BreakdownView {
-
     @ViewBuilder
     func breakdownContent(breakdown: ScriptBreakdown) -> some View {
-
         if breakdown.scenes.isEmpty || !breakdown.scenes.indices.contains(selectedSceneIndex) {
             ContentUnavailableView("No Scenes", systemImage: "film")
         } else {
-
             let scene = breakdown.scenes[selectedSceneIndex]
-
             ScrollView {
                 VStack(spacing: 20) {
                     summaryRow(scene: scene, sceneNumber: selectedSceneIndex + 1)
@@ -68,34 +55,30 @@ extension BreakdownView {
     }
 
     // MARK: Summary Cards
-
     @ViewBuilder
     func summaryRow(scene: SceneBreakdown, sceneNumber: Int) -> some View {
         HStack(spacing: 12) {
-
-            SummaryCard(title: "Scene",      count: sceneNumber,            icon: "film.fill",      color: .white)
-
+            SummaryCard(title: "Scene", count: sceneNumber, icon: "film.fill", color: .white)
             if !scene.characters.isEmpty {
                 SummaryCard(title: "Characters", count: scene.characters.count, icon: "person.3.fill", color: .indigo)
             }
             if !scene.locations.isEmpty {
-                SummaryCard(title: "Locations",  count: scene.locations.count,  icon: "location.fill", color: .cyan)
+                SummaryCard(title: "Locations", count: scene.locations.count, icon: "location.fill", color: .cyan)
             }
             if !scene.props.isEmpty {
-                SummaryCard(title: "Props",      count: scene.props.count,      icon: "shippingbox.fill", color: .orange)
+                SummaryCard(title: "Props", count: scene.props.count, icon: "shippingbox.fill", color: .orange)
             }
             if !scene.vehicles.isEmpty {
-                SummaryCard(title: "Vehicles",   count: scene.vehicles.count,   icon: "car.fill",      color: .blue)
+                SummaryCard(title: "Vehicles", count: scene.vehicles.count, icon: "car.fill", color: .blue)
             }
             if !scene.equipment.isEmpty {
-                SummaryCard(title: "Equipment",  count: scene.equipment.count,  icon: "camera.fill",   color: .yellow)
+                SummaryCard(title: "Equipment", count: scene.equipment.count, icon: "camera.fill", color: .yellow)
             }
         }
     }
 
     @ViewBuilder
     func sectionsGrid(scene: SceneBreakdown, breakdown: ScriptBreakdown) -> some View {
- 
         LazyVGrid(
             columns: [
                 GridItem(.flexible(), spacing: 16),
@@ -104,7 +87,6 @@ extension BreakdownView {
             alignment: .leading,
             spacing: 16
         ) {
- 
             if !scene.characters.isEmpty {
                 SectionCard(title: "Characters", icon: "person.3.fill", iconColor: .indigo) {
                     CollapsibleRows(items: scene.characters) { character in
@@ -120,7 +102,6 @@ extension BreakdownView {
                     }
                 }
             }
- 
             if !scene.locations.isEmpty {
                 SectionCard(title: "Locations", icon: "location.fill", iconColor: .cyan) {
                     CollapsibleRows(items: scene.locations) { location in
@@ -136,19 +117,16 @@ extension BreakdownView {
                     }
                 }
             }
- 
             if !scene.props.isEmpty {
                 SectionCard(title: "Props", icon: "shippingbox.fill", iconColor: .orange) {
                     ChipGrid(items: scene.props.map(\.name), color: .orange)
                 }
             }
- 
             if !scene.setDressing.isEmpty {
                 SectionCard(title: "Set Dressing", icon: "sofa.fill", iconColor: .brown) {
                     ChipGrid(items: scene.setDressing, color: .brown)
                 }
             }
- 
             if !scene.vehicles.isEmpty {
                 SectionCard(title: "Vehicles", icon: "car.fill", iconColor: .blue) {
                     CollapsibleRows(items: scene.vehicles) { vehicle in
@@ -164,7 +142,6 @@ extension BreakdownView {
                     }
                 }
             }
- 
             if !scene.animals.isEmpty {
                 SectionCard(title: "Animals", icon: "hare.fill", iconColor: .green) {
                     CollapsibleRows(items: scene.animals) { animal in
@@ -180,19 +157,16 @@ extension BreakdownView {
                     }
                 }
             }
- 
             if !scene.wardrobe.isEmpty {
                 SectionCard(title: "Wardrobe", icon: "tshirt.fill", iconColor: .pink) {
                     ChipGrid(items: scene.wardrobe.map(\.name), color: .pink)
                 }
             }
- 
             if !scene.makeup.isEmpty {
                 SectionCard(title: "Makeup", icon: "paintbrush.fill", iconColor: .red) {
                     ChipGrid(items: scene.makeup.map(\.name), color: .red)
                 }
             }
- 
             if !scene.equipment.isEmpty {
                 SectionCard(title: "Equipment", icon: "camera.fill", iconColor: .yellow) {
                     CollapsibleRows(items: scene.equipment) { item in
@@ -208,13 +182,12 @@ extension BreakdownView {
                     }
                 }
             }
- 
             if !scene.vfx.isEmpty || !scene.sfx.isEmpty || !scene.sound.isEmpty || !scene.music.isEmpty {
                 SectionCard(title: "Post Production", icon: "sparkles", iconColor: .purple) {
                     if !scene.vfx.isEmpty   { PostChipGroup(label: "VFX",   items: scene.vfx,   color: .indigo) }
                     if !scene.sfx.isEmpty   { PostChipGroup(label: "SFX",   items: scene.sfx,   color: .purple) }
-                    if !scene.sound.isEmpty { PostChipGroup(label: "Sound", items: scene.sound, color: .blue) }
-                    if !scene.music.isEmpty { PostChipGroup(label: "Music", items: scene.music, color: .pink) }
+                    if !scene.sound.isEmpty { PostChipGroup(label: "Sound", items: scene.sound, color: .blue)   }
+                    if !scene.music.isEmpty { PostChipGroup(label: "Music", items: scene.music, color: .pink)   }
                 }
             }
         }
@@ -230,66 +203,66 @@ extension BreakdownView {
 }
 
 // MARK: - Section Card
-
 struct SectionCard<Content: View>: View {
-
     let title: String
     let icon: String
     var iconColor: Color = .white
     @ViewBuilder let content: Content
 
+    // Scales with the user's Dynamic Type setting
+    @ScaledMetric(relativeTo: .headline) private var iconCircleSize: CGFloat = 30
+    @ScaledMetric(relativeTo: .headline) private var iconFontSize: CGFloat = 13
+
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 8) {
-                ZStack {
-                    Circle()
-                        .fill(iconColor.opacity(0.15))
-                        .frame(width: 30, height: 30)
-                    Image(systemName: icon)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(iconColor.opacity(0.7))
-                }
+                Image(systemName: icon)
+                    .font(.system(size: iconFontSize, weight: .semibold))
+                    .foregroundStyle(iconColor.opacity(0.85))
+                    .frame(width: iconCircleSize, height: iconCircleSize)
+                    .background(.ultraThinMaterial, in: Circle())
+                    .overlay(Circle().stroke(iconColor.opacity(0.18), lineWidth: 0.5))
+
                 Text(title)
                     .font(.headline)
                     .foregroundStyle(.white)
                 Spacer()
             }
             content
-            Spacer(minLength: 0) // pushes content to top when card stretches
+            Spacer(minLength: 0)
         }
         .padding(16)
-        // maxHeight: .infinity — lets the card fill the row height set by its taller neighbour
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .glassEffect(in: RoundedRectangle(cornerRadius: 24))
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).stroke(.white.opacity(0.12), lineWidth: 0.5))
     }
 }
 
 // MARK: - Entity Detail Row
-
 struct EntityDetailRow: View {
-
-    let name:       String
-    let detail:     String
-    let icon:       String
-    let iconColor:  Color
+    let name: String
+    let detail: String
+    let icon: String
+    let iconColor: Color
     let sceneCount: Int
+
+    @ScaledMetric(relativeTo: .subheadline) private var iconCircleSize: CGFloat = 34
+    @ScaledMetric(relativeTo: .subheadline) private var iconFontSize: CGFloat = 12
+    @ScaledMetric(relativeTo: .caption)     private var badgeFontSize: CGFloat = 14
 
     var body: some View {
         HStack(spacing: 10) {
-
-            ZStack {
-                Circle()
-                    .fill(iconColor.opacity(0.12))
-                    .frame(width: 28, height: 28)
-                Image(systemName: icon)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(iconColor.opacity(0.7))
-            }
+            Image(systemName: icon)
+                .font(.system(size: iconFontSize, weight: .semibold))
+                .foregroundStyle(iconColor.opacity(0.85))
+                .frame(width: iconCircleSize, height: iconCircleSize)
+                .background(.ultraThinMaterial, in: Circle())
+                .overlay(Circle().stroke(iconColor.opacity(0.18), lineWidth: 0.5))
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(name)
                     .font(.subheadline)
-                    .fontWeight(.medium)
+                    .fontWeight(.semibold)
                     .foregroundStyle(.white)
                 if !detail.isEmpty {
                     Text(detail.capitalized)
@@ -297,12 +270,10 @@ struct EntityDetailRow: View {
                         .foregroundStyle(.secondary)
                 }
             }
-
             Spacer()
-
             if sceneCount > 0 {
                 Text("\(sceneCount) scenes")
-                    .font(.system(size: 8, weight: .medium))
+                    .font(.system(size: badgeFontSize, weight: .medium))
                     .foregroundStyle(iconColor.opacity(0.8))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 6)
@@ -311,63 +282,50 @@ struct EntityDetailRow: View {
             }
         }
         .padding(10)
-        .glassEffect(in: RoundedRectangle(cornerRadius: 24))
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(.white.opacity(0.10), lineWidth: 0.5))
     }
 }
 
 // MARK: - Chip Grid
-
 struct ChipGrid: View {
-
     let items: [String]
     var color: Color = .white
+
+    @ScaledMetric(relativeTo: .caption) private var chipFontSize: CGFloat = 14
 
     var body: some View {
         FlowLayout(spacing: 6) {
             ForEach(items, id: \.self) { item in
                 Text(item)
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(color.opacity(0.8))
+                    .font(.system(size: chipFontSize, weight: .medium))
+                    .foregroundStyle(color.opacity(0.9))
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .background(color.opacity(0.12))
-                    .clipShape(Capsule())
+                    .background(color.opacity(0.15), in: Capsule())
+                    .overlay(Capsule().stroke(color.opacity(0.25), lineWidth: 0.5))
             }
         }
     }
 }
 
 // MARK: - Flow Layout
-
 struct FlowLayout: Layout {
     let spacing: CGFloat
-    
-    init(spacing: CGFloat = 8) {
-        self.spacing = spacing
-    }
-    
+    init(spacing: CGFloat = 8) { self.spacing = spacing }
+
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let result = FlowResult(
-            in: proposal.replacingUnspecifiedDimensions().width,
-            subviews: subviews,
-            spacing: spacing
-        )
-        return result.bounds
+        FlowResult(in: proposal.replacingUnspecifiedDimensions().width, subviews: subviews, spacing: spacing).bounds
     }
-    
+
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let result = FlowResult(
-            in: proposal.replacingUnspecifiedDimensions().width,
-            subviews: subviews,
-            spacing: spacing
-        )
+        let result = FlowResult(in: proposal.replacingUnspecifiedDimensions().width, subviews: subviews, spacing: spacing)
         for (index, subview) in subviews.enumerated() {
-            let frameOrigin = result.frames[index].origin
-            let placementPoint = CGPoint(
-                x: frameOrigin.x + bounds.origin.x,
-                y: frameOrigin.y + bounds.origin.y
+            subview.place(
+                at: CGPoint(x: result.frames[index].origin.x + bounds.origin.x,
+                            y: result.frames[index].origin.y + bounds.origin.y),
+                proposal: .unspecified
             )
-            subview.place(at: placementPoint, proposal: .unspecified)
         }
     }
 }
@@ -375,82 +333,57 @@ struct FlowLayout: Layout {
 struct FlowResult {
     var frames: [CGRect] = []
     var bounds: CGSize = .zero
-    
+
     init(in maxWidth: CGFloat, subviews: LayoutSubviews, spacing: CGFloat) {
         var origin = CGPoint.zero
         var rowHeight: CGFloat = 0
-        
         for subview in subviews {
             let size = subview.sizeThatFits(.unspecified)
-            
-            if origin.x + size.width > maxWidth && origin.x > 0 {
-                // Start new row
+            if origin.x + size.width > maxWidth, origin.x > 0 {
                 origin.x = 0
                 origin.y += rowHeight + spacing
                 rowHeight = 0
             }
-            
             let frame = CGRect(origin: origin, size: size)
             frames.append(frame)
-            
             origin.x += size.width + spacing
             rowHeight = max(rowHeight, size.height)
             bounds.width = max(bounds.width, frame.maxX)
         }
-        
         bounds.height = origin.y + rowHeight
     }
 }
 
 // MARK: - Post Chip Group
-
 struct PostChipGroup: View {
-
     let label: String
     let items: [String]
     var color: Color = .white
 
     var body: some View {
         VStack(alignment: .leading) {
-//            if !label.isEmpty {
-//                Text(label)
-//                    .font(.caption)
-//                    .fontWeight(.semibold)
-//                    .foregroundStyle(color.opacity(0.7))
-//            }
             ChipGrid(items: items, color: color)
         }
     }
 }
 
-
 // MARK: - CollapsibleRows
-//
-// Shows up to 3 rows by default. If there are more, a button
-// reveals the rest in place — no nested ScrollView needed.
- 
 struct CollapsibleRows<Item: Identifiable, Row: View>: View {
- 
     let items: [Item]
     var maxVisible: Int = 3
     @ViewBuilder let row: (Item) -> Row
- 
     @State private var showAll = false
- 
+
     private var visibleItems: [Item] {
         showAll ? items : Array(items.prefix(maxVisible))
     }
- 
+
     var body: some View {
         VStack(spacing: 8) {
-            ForEach(visibleItems) { item in
-                row(item)
-            }
+            ForEach(visibleItems) { item in row(item) }
             if items.count > maxVisible {
                 Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        showAll.toggle()
-                    }
+                    withAnimation(.easeInOut(duration: 0.2)) { showAll.toggle() }
                 } label: {
                     HStack(spacing: 4) {
                         Image(systemName: showAll ? "chevron.up" : "chevron.down")

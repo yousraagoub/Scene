@@ -30,7 +30,7 @@ struct SceneNavigationView: View {
 
 
             Text(
-                String(localized:"\(sceneIndex + 1) out of \(totalScenes)")
+                String(localized:" Scene \(totalScenes)")
             )
             .font(.title2)
 
@@ -51,3 +51,4 @@ struct SceneNavigationView: View {
         .foregroundStyle(.white)
     }
 }
+
