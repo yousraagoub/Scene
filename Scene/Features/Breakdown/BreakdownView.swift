@@ -6,18 +6,12 @@ struct BreakdownView: View {
     @State private var selectedSceneIndex = 0
     @State private var showBudget = false
     @AppStorage("userName") private var userName: String = ""
+    @EnvironmentObject var settings: AppSettings
 
     var body: some View {
         VStack(spacing: 16) {
             // MARK: - Top Bar
             HStack {
-                if !showBudget {
-                    SceneNavigationView(
-                        sceneIndex: $selectedSceneIndex,
-                        totalScenes: breakdown.scenes.count
-                    )
-                }
-                Spacer()
                 Picker("", selection: $showBudget) {
                     Text("Breakdown").tag(false)
                     Text("Budget").tag(true)
@@ -25,6 +19,15 @@ struct BreakdownView: View {
                 .pickerStyle(.segmented)
                 .tint(.white)
                 .frame(width: 220)
+                Spacer()
+                if !showBudget {
+                    SceneNavigationView(
+                        sceneIndex: $selectedSceneIndex,
+                        totalScenes: breakdown.scenes.count
+                    )
+                }
+                
+                
             }
 
             if showBudget {
@@ -58,21 +61,21 @@ extension BreakdownView {
     @ViewBuilder
     func summaryRow(scene: SceneBreakdown, sceneNumber: Int) -> some View {
         HStack(spacing: 12) {
-            SummaryCard(title: "Scene", count: sceneNumber, icon: "film.fill", color: .white)
+            SummaryCard(title: settings.language == .arabic ? "المشاهد" : "Scenes", count: sceneNumber, icon: "film.fill", color: .white)
             if !scene.characters.isEmpty {
-                SummaryCard(title: "Characters", count: scene.characters.count, icon: "person.3.fill", color: .indigo)
+                SummaryCard(title: settings.language == .arabic ? "الشخصيات" : "Characters" , count: scene.characters.count, icon: "person.3.fill", color: .indigo)
             }
             if !scene.locations.isEmpty {
-                SummaryCard(title: "Locations", count: scene.locations.count, icon: "location.fill", color: .cyan)
+                SummaryCard(title: settings.language == .arabic ? "المواقع" : "Locations", count: scene.locations.count, icon: "location.fill", color: .cyan)
             }
             if !scene.props.isEmpty {
-                SummaryCard(title: "Props", count: scene.props.count, icon: "shippingbox.fill", color: .orange)
+                SummaryCard(title: settings.language == .arabic ? "المقتنيات" : "Props", count: scene.props.count, icon: "shippingbox.fill", color: .orange)
             }
             if !scene.vehicles.isEmpty {
-                SummaryCard(title: "Vehicles", count: scene.vehicles.count, icon: "car.fill", color: .blue)
+                SummaryCard(title: settings.language == .arabic ? "المركبات" : "Vehicles", count: scene.vehicles.count, icon: "car.fill", color: .blue)
             }
             if !scene.equipment.isEmpty {
-                SummaryCard(title: "Equipment", count: scene.equipment.count, icon: "camera.fill", color: .yellow)
+                SummaryCard(title: settings.language == .arabic ? "المعدات" : "Equipment", count: scene.equipment.count, icon: "camera.fill", color: .yellow)
             }
         }
     }
@@ -88,7 +91,7 @@ extension BreakdownView {
             spacing: 16
         ) {
             if !scene.characters.isEmpty {
-                SectionCard(title: "Characters", icon: "person.3.fill", iconColor: .indigo) {
+                SectionCard(title: settings.language == .arabic ? "الشخصيات" : "Characters", icon: "person.3.fill", iconColor: .indigo) {
                     CollapsibleRows(items: scene.characters) { character in
                         EntityDetailRow(
                             name: character.name,
@@ -103,7 +106,7 @@ extension BreakdownView {
                 }
             }
             if !scene.locations.isEmpty {
-                SectionCard(title: "Locations", icon: "location.fill", iconColor: .cyan) {
+                SectionCard(title: settings.language == .arabic ? "المواقع" : "Locations", icon: "location.fill", iconColor: .cyan) {
                     CollapsibleRows(items: scene.locations) { location in
                         EntityDetailRow(
                             name: location.name,
@@ -118,17 +121,17 @@ extension BreakdownView {
                 }
             }
             if !scene.props.isEmpty {
-                SectionCard(title: "Props", icon: "shippingbox.fill", iconColor: .orange) {
+                SectionCard(title: settings.language == .arabic ? "المقتنيات" : "Props", icon: "shippingbox.fill", iconColor: .orange) {
                     ChipGrid(items: scene.props.map(\.name), color: .orange)
                 }
             }
             if !scene.setDressing.isEmpty {
-                SectionCard(title: "Set Dressing", icon: "sofa.fill", iconColor: .brown) {
+                SectionCard(title: settings.language == .arabic ? "تأثيث الموقع" : "Set Dressing", icon: "sofa.fill", iconColor: .brown) {
                     ChipGrid(items: scene.setDressing, color: .brown)
                 }
             }
             if !scene.vehicles.isEmpty {
-                SectionCard(title: "Vehicles", icon: "car.fill", iconColor: .blue) {
+                SectionCard(title: settings.language == .arabic ? "المركبات" : "Vehicles", icon: "car.fill", iconColor: .blue) {
                     CollapsibleRows(items: scene.vehicles) { vehicle in
                         EntityDetailRow(
                             name: vehicle.name,
@@ -143,7 +146,7 @@ extension BreakdownView {
                 }
             }
             if !scene.animals.isEmpty {
-                SectionCard(title: "Animals", icon: "hare.fill", iconColor: .green) {
+                SectionCard(title: settings.language == .arabic ? "الحيوانات" :  "Animals", icon: "hare.fill", iconColor: .green) {
                     CollapsibleRows(items: scene.animals) { animal in
                         EntityDetailRow(
                             name: animal.name,
@@ -158,17 +161,17 @@ extension BreakdownView {
                 }
             }
             if !scene.wardrobe.isEmpty {
-                SectionCard(title: "Wardrobe", icon: "tshirt.fill", iconColor: .pink) {
+                SectionCard(title: settings.language == .arabic ? "الملابس" : "Wardrobe", icon: "tshirt.fill", iconColor: .pink) {
                     ChipGrid(items: scene.wardrobe.map(\.name), color: .pink)
                 }
             }
             if !scene.makeup.isEmpty {
-                SectionCard(title: "Makeup", icon: "paintbrush.fill", iconColor: .red) {
+                SectionCard(title: settings.language == .arabic ? "المكياج" : "Makeup", icon: "paintbrush.fill", iconColor: .red) {
                     ChipGrid(items: scene.makeup.map(\.name), color: .red)
                 }
             }
             if !scene.equipment.isEmpty {
-                SectionCard(title: "Equipment", icon: "camera.fill", iconColor: .yellow) {
+                SectionCard(title: settings.language == .arabic ? "المعدات" :"Equipment", icon: "camera.fill", iconColor: .yellow) {
                     CollapsibleRows(items: scene.equipment) { item in
                         EntityDetailRow(
                             name: item.name,
@@ -183,7 +186,7 @@ extension BreakdownView {
                 }
             }
             if !scene.vfx.isEmpty || !scene.sfx.isEmpty || !scene.sound.isEmpty || !scene.music.isEmpty {
-                SectionCard(title: "Post Production", icon: "sparkles", iconColor: .purple) {
+                SectionCard(title: settings.language == .arabic ? "بعد الإانتاج" : "Post Production", icon: "sparkles", iconColor: .purple) {
                     if !scene.vfx.isEmpty   { PostChipGroup(label: "VFX",   items: scene.vfx,   color: .indigo) }
                     if !scene.sfx.isEmpty   { PostChipGroup(label: "SFX",   items: scene.sfx,   color: .purple) }
                     if !scene.sound.isEmpty { PostChipGroup(label: "Sound", items: scene.sound, color: .blue)   }
@@ -245,6 +248,7 @@ struct EntityDetailRow: View {
     let icon: String
     let iconColor: Color
     let sceneCount: Int
+    @EnvironmentObject var settings: AppSettings
 
     @ScaledMetric(relativeTo: .subheadline) private var iconCircleSize: CGFloat = 34
     @ScaledMetric(relativeTo: .subheadline) private var iconFontSize: CGFloat = 12
@@ -264,15 +268,14 @@ struct EntityDetailRow: View {
                     .font(.subheadline)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
-                if !detail.isEmpty {
-                    Text(detail.capitalized)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
             }
             Spacer()
             if sceneCount > 0 {
-                Text("\(sceneCount) scenes")
+                Text(
+                    settings.language == .arabic
+                    ? "\(sceneCount == 1 ? "مشهد" : "مشاهد") \(sceneCount)"
+                    : "\(sceneCount) \(sceneCount == 1 ? "scene" : "scenes")"
+                )
                     .font(.system(size: badgeFontSize, weight: .medium))
                     .foregroundStyle(iconColor.opacity(0.8))
                     .padding(.horizontal, 8)

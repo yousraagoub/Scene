@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ProjectsView: View {
-
+    @EnvironmentObject var settings: AppSettings
     @ObservedObject var homeVM: HomeViewModel
 
     var body: some View {
@@ -20,7 +20,7 @@ struct ProjectsView: View {
                     }
                     HStack {
                         Spacer()
-                        Text("No Projects Yet")
+                        Text(settings.language == .arabic ? "لا يوجد مشاريع حتى الآن" : "No Projects Yet")
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.secondary)
                         Spacer()
@@ -67,6 +67,8 @@ struct FileCardView: View {
 
     @State private var hovered = false
     @State private var showDeleteAlert = false
+    
+    @EnvironmentObject var settings: AppSettings
 
     var body: some View {
         cardContent
@@ -116,15 +118,23 @@ struct FileCardView: View {
     
     private var genreAndTypeView: some View {
         HStack(spacing: 4) {
-            Text(project.genre)
+            Text(
+                project.genre.localizedGenre(
+                    for: settings.language
+                )
+            )
                 .font(.system(size: 10))
                 .foregroundColor(.secondary)
             Text("•")
                 .font(.system(size: 10))
                 .foregroundColor(.secondary)
-            Text(project.scriptType.rawValue)
-                .font(.system(size: 10))
-                .foregroundColor(.secondary)
+            Text(
+                project.scriptType.localized(
+                    for: settings.language
+                )
+            )
+            .font(.system(size: 10))
+            .foregroundColor(.secondary)
         }
     }
     
@@ -133,7 +143,11 @@ struct FileCardView: View {
             Image(systemName: "clock")
                 .font(.system(size: 9))
                 .foregroundColor(.secondary)
-            Text(project.createdAt.relativeFormatted)
+            Text(
+                project.createdAt.relativeFormatted(
+                    for: settings.language
+                )
+            )
                 .font(.system(size: 10))
                 .foregroundColor(.secondary)
             Spacer()
@@ -171,9 +185,122 @@ struct FileCardView: View {
 // MARK: - Date+relativeFormatted
 
 private extension Date {
-    var relativeFormatted: String {
+
+    func relativeFormatted(for language: AppLanguage) -> String {
         let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .abbreviated  // "2 hr. ago", "3 days ago"
-        return formatter.localizedString(for: self, relativeTo: .now)
+        formatter.unitsStyle = .abbreviated
+
+        formatter.locale = Locale(
+            identifier: language == .arabic
+            ? "ar"
+            : "en"
+        )
+
+        return formatter.localizedString(
+            for: self,
+            relativeTo: .now
+        )
+    }
+}
+
+
+extension ScriptType {
+    
+    var arabicName: String {
+            switch self {
+            case .film:
+                return "فيلم"
+
+            case .series:
+                return "مسلسل"
+            }
+        }
+
+    func localized(for language: AppLanguage) -> String {
+
+        switch self {
+
+        case .film:
+            return language == .arabic
+                ? "فيلم"
+                : "Film"
+
+        case .series:
+            return language == .arabic
+                ? "مسلسل"
+                : "Series"
+        }
+    }
+}
+
+extension String {
+
+    func localizedGenre(for language: AppLanguage) -> String {
+
+        switch self {
+
+        case "Drama", "دراما":
+            return language == .arabic ? "دراما" : "Drama"
+
+        case "Action", "أكشن":
+            return language == .arabic ? "أكشن" : "Action"
+
+        case "Comedy", "كوميديا":
+            return language == .arabic ? "كوميديا" : "Comedy"
+
+        case "Horror", "رعب":
+            return language == .arabic ? "رعب" : "Horror"
+
+        case "Thriller", "إثارة":
+            return language == .arabic ? "إثارة" : "Thriller"
+
+        case "Suspense", "تشويق":
+            return language == .arabic ? "تشويق" : "Suspense"
+
+        case "Mystery", "غموض":
+            return language == .arabic ? "غموض" : "Mystery"
+
+        case "Crime", "جريمة":
+            return language == .arabic ? "جريمة" : "Crime"
+
+        case "Sci-Fi", "خيال علمي":
+            return language == .arabic ? "خيال علمي" : "Sci-Fi"
+
+        case "Fantasy", "فانتازيا":
+            return language == .arabic ? "فانتازيا" : "Fantasy"
+
+        case "Historical", "تاريخي":
+            return language == .arabic ? "تاريخي" : "Historical"
+
+        case "Biography", "سيرة ذاتية":
+            return language == .arabic ? "سيرة ذاتية" : "Biography"
+
+        case "Romance", "رومانسي":
+            return language == .arabic ? "رومانسي" : "Romance"
+
+        case "Adventure", "مغامرة":
+            return language == .arabic ? "مغامرة" : "Adventure"
+
+        case "War", "حربي":
+            return language == .arabic ? "حربي" : "War"
+
+        case "Psychological", "نفسي":
+            return language == .arabic ? "نفسي" : "Psychological"
+
+        case "Documentary", "وثائقي":
+            return language == .arabic ? "وثائقي" : "Documentary"
+
+        case "Family", "عائلي":
+            return language == .arabic ? "عائلي" : "Family"
+
+        case "Musical", "موسيقي":
+            return language == .arabic ? "موسيقي" : "Musical"
+
+        case "Animation", "رسوم متحركة":
+            return language == .arabic ? "رسوم متحركة" : "Animation"
+
+        default:
+            return self
+        }
     }
 }

@@ -7,7 +7,6 @@ import CloudKit
 import Foundation
 
 struct ProjectModel: Identifiable {
-
     let id:         String
     var title:      String
     var genre:      String
@@ -23,6 +22,7 @@ enum ScriptType: String, CaseIterable {
     case film   = "Film"
     case series = "Series"
 }
+
 
 enum ProjectStatus: String {
     case draft      // created, no screenplay uploaded yet

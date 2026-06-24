@@ -40,7 +40,7 @@ struct SidebarView: View {
 
             SidebarButton(
                 item: SidebarItem(
-                    title: "Create New Project",
+                    title: settings.language == .arabic ? "أنشئ مشروع جديد" : "Create New Project",
                     systemImage: "plus.circle.fill"
                 ),
                 isSelected:
@@ -52,7 +52,7 @@ struct SidebarView: View {
 
             SidebarButton(
                 item: SidebarItem(
-                    title: "My Projects",
+                    title: settings.language == .arabic ? "مشاريعي" : "My Projects",
                     systemImage: "archivebox.circle.fill"
                 ),
                 isSelected:

@@ -11,57 +11,57 @@ struct BudgetDonutChartView: View {
 
     let breakdown: ScriptBreakdown
     private let segmentSpacing: Double = 5 // degrees
-
     @State private var selectedIndex = 0
+    @EnvironmentObject var settings: AppSettings
 
     // MARK: - Categories
 
     private var categories: [BudgetCategory] {
         [
             BudgetCategory(
-                name: "Cast",
+                name: settings.language == .arabic ? "الشخصيات" : "Characters",
                 amount: breakdown.totalCharacters.map(\.cost).reduce(0, +),
                 color: .indigo,
                 icon: "person.3.fill"
             ),
             BudgetCategory(
-                name: "Locations",
+                name: settings.language == .arabic ? "المواقع" : "Locations",
                 amount: breakdown.totalLocations.map(\.cost).reduce(0, +),
                 color: .cyan,
                 icon: "location.fill"
             ),
             BudgetCategory(
-                name: "Props",
+                name: settings.language == .arabic ? "المقتنيات" : "Props",
                 amount: breakdown.totalProps.map(\.cost).reduce(0, +),
                 color: .orange,
                 icon: "shippingbox.fill"
             ),
             BudgetCategory(
-                name: "Vehicles",
+                name: settings.language == .arabic ? "المركبات" : "Vehicles",
                 amount: breakdown.totalVehicles.map(\.cost).reduce(0, +),
                 color: .blue,
                 icon: "car.fill"
             ),
             BudgetCategory(
-                name: "Animals",
+                name: settings.language == .arabic ? "الحيوانات" : "Animals",
                 amount: breakdown.totalAnimals.map(\.cost).reduce(0, +),
                 color: .green,
                 icon: "hare.fill"
             ),
             BudgetCategory(
-                name: "Wardrobe",
+                name: settings.language == .arabic ? "الملابس" : "Wardrobe",
                 amount: breakdown.totalWardrobe.map(\.cost).reduce(0, +),
                 color: .pink,
                 icon: "tshirt.fill"
             ),
             BudgetCategory(
-                name: "Makeup",
+                name: settings.language == .arabic ? "المكياج" : "Makeup",
                 amount: breakdown.totalMakeup.map(\.cost).reduce(0, +),
                 color: .red,
                 icon: "paintbrush.fill"
             ),
             BudgetCategory(
-                name: "Equipment",
+                name: settings.language == .arabic ? "المعدات" : "Equipment",
                 amount: breakdown.totalEquipment.map(\.cost).reduce(0, +),
                 color: .yellow,
                 icon: "camera.fill"
@@ -130,14 +130,16 @@ struct BudgetDonutChartView: View {
                         
                         HStack(spacing: 6) {
 
-                            Image("riyalSign")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 22, height: 22)
+                            
 
                             Text("\(Int(selectedCategory?.amount ?? totalBudget))")
                                 .font(.largeTitle)
                                 .foregroundStyle(.white)
+                            
+                            Image("riyalSign")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 22, height: 22)
                         }
                         Text(selectedCategory?.name ?? "Budget")
                             .font(.title)
@@ -171,15 +173,13 @@ struct BudgetDonutChartView: View {
                 HStack(spacing: 10) {
 
                     Spacer()
-
+                    Text("\(Int(totalBudget))")
+                        .font(.system(size: 60))
+                        .foregroundStyle(.white)
                     Image("riyalSign")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 50, height: 50)
-
-                    Text("\(Int(totalBudget))")
-                        .font(.system(size: 60))
-                        .foregroundStyle(.white)
                 }
             }
             .frame(maxWidth: .infinity)

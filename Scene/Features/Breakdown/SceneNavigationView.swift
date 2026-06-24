@@ -6,8 +6,8 @@
 import SwiftUI
 
 struct SceneNavigationView: View {
-
     @Binding var sceneIndex: Int
+    @EnvironmentObject var settings: AppSettings
 
     let totalScenes: Int
 
@@ -29,9 +29,7 @@ struct SceneNavigationView: View {
             .disabled(sceneIndex == 0)
 
 
-            Text(
-                String(localized:" Scene \(totalScenes)")
-            )
+            Text(settings.language == .arabic ? "المشهد \(sceneIndex + 1)" : "Scene \(sceneIndex + 1)")
             .font(.title2)
 
             Button {

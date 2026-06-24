@@ -5,7 +5,7 @@
 import SwiftUI
 
 struct BudgetView: View {
-
+    @EnvironmentObject var settings: AppSettings
     @Binding var breakdown: ScriptBreakdown
     var onCostChange: (String, Double) -> Void = { _, _ in }
 
@@ -17,7 +17,7 @@ struct BudgetView: View {
                 VStack(spacing: 24) {
 
                     budgetSection(
-                        title: "Cast",
+                        title: settings.language == .arabic ? "الشخصيات" : "Characters",
                         icon: "person.3.fill",
                         indices: breakdown.totalCharacters.indices,
                         id:   { breakdown.totalCharacters[$0].id },
@@ -25,7 +25,7 @@ struct BudgetView: View {
                         cost: { $breakdown.totalCharacters[$0].cost }
                     )
                     budgetSection(
-                        title: "Locations",
+                        title: settings.language == .arabic ? "المواقع" :"Locations",
                         icon: "location.fill",
                         indices: breakdown.totalLocations.indices,
                         id:   { breakdown.totalLocations[$0].id },
@@ -33,7 +33,7 @@ struct BudgetView: View {
                         cost: { $breakdown.totalLocations[$0].cost }
                     )
                     budgetSection(
-                        title: "Props",
+                        title: settings.language == .arabic ? "المقتنيات" : "Props",
                         icon: "shippingbox.fill",
                         indices: breakdown.totalProps.indices,
                         id:   { breakdown.totalProps[$0].id },
@@ -41,7 +41,7 @@ struct BudgetView: View {
                         cost: { $breakdown.totalProps[$0].cost }
                     )
                     budgetSection(
-                        title: "Vehicles",
+                        title: settings.language == .arabic ? "المركبات" :"Vehicles",
                         icon: "car.fill",
                         indices: breakdown.totalVehicles.indices,
                         id:   { breakdown.totalVehicles[$0].id },
@@ -49,7 +49,7 @@ struct BudgetView: View {
                         cost: { $breakdown.totalVehicles[$0].cost }
                     )
                     budgetSection(
-                        title: "Animals",
+                        title: settings.language == .arabic ? "الحيوانات" :"Animals",
                         icon: "hare.fill",
                         indices: breakdown.totalAnimals.indices,
                         id:   { breakdown.totalAnimals[$0].id },
@@ -57,7 +57,7 @@ struct BudgetView: View {
                         cost: { $breakdown.totalAnimals[$0].cost }
                     )
                     budgetSection(
-                        title: "Wardrobe",
+                        title: settings.language == .arabic ? "الملابس" :"Wardrobe",
                         icon: "tshirt.fill",
                         indices: breakdown.totalWardrobe.indices,
                         id:   { breakdown.totalWardrobe[$0].id },
@@ -65,7 +65,7 @@ struct BudgetView: View {
                         cost: { $breakdown.totalWardrobe[$0].cost }
                     )
                     budgetSection(
-                        title: "Makeup",
+                        title: settings.language == .arabic ? "المكياج" : "Makeup",
                         icon: "paintbrush.fill",
                         indices: breakdown.totalMakeup.indices,
                         id:   { breakdown.totalMakeup[$0].id },
@@ -73,7 +73,7 @@ struct BudgetView: View {
                         cost: { $breakdown.totalMakeup[$0].cost }
                     )
                     budgetSection(
-                        title: "Equipment",
+                        title: settings.language == .arabic ? "المعدات" : "Equipment",
                         icon: "camera.fill",
                         indices: breakdown.totalEquipment.indices,
                         id:   { breakdown.totalEquipment[$0].id },
@@ -170,7 +170,7 @@ struct BudgetView: View {
                         .fontWeight(.semibold)
                         .foregroundStyle(.secondary)
                     Spacer()
-                    Text("\(indices.count) item\(indices.count == 1 ? "" : "s")")
+                    Text(settings.language == .arabic ? "\(indices.count == 1 ? "عنصر" : "عناصر") \(indices.count)" : "\(indices.count) element\(indices.count == 1 ? "" : "s")")
                         .font(.title2)
                         .foregroundStyle(.tertiary)
                 }

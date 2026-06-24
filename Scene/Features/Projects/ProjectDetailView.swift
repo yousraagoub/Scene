@@ -2,15 +2,13 @@
 //  ProjectDetailView.swift
 //  Scene
 //
-//  Created by Raghad Alzemami on 21/12/1447 AH.
-//
 
 import SwiftUI
 
 struct ProjectDetailView: View {
-
     @State var vm: ProjectViewModel
-
+    @EnvironmentObject var settings: AppSettings
+    
     init(project: ProjectModel) {
         _vm = State(initialValue: ProjectViewModel(project: project))
     }
@@ -18,7 +16,7 @@ struct ProjectDetailView: View {
     var body: some View {
         Group {
             if vm.isLoading {
-                ProgressView("Loading breakdown…")
+                ProgressView(settings.language == .arabic ? "تحميل التفاصيل..." : "Loading breakdown…")
 
             } else if vm.breakdown != nil {
                 BreakdownView(
@@ -34,16 +32,16 @@ struct ProjectDetailView: View {
 
             } else if vm.error != nil {
                 ContentUnavailableView(
-                    "Failed to Load",
+                    settings.language == .arabic ? "فشل في تحميل" : "Failed to Load",
                     systemImage: "exclamationmark.triangle",
-                    description: Text("Check your connection and try again.")
+                    description: Text(settings.language == .arabic ? "تأكد من اتصالك بالإنترنت وحاول مرة أخرى." : "Check your connection and try again.")
                 )
 
             } else {
                 ContentUnavailableView(
-                    "No Breakdown",
+                    settings.language == .arabic ? "لا يوجد تفاصيل" : "No Breakdown",
                     systemImage: "film",
-                    description: Text("Upload a screenplay to generate a breakdown.")
+                    description: Text(settings.language == .arabic ? "إرفاق السيناريو لإنشاء تفاصيل." : "Upload a screenplay to generate a breakdown.")
                 )
             }
         }
