@@ -15,6 +15,7 @@ struct BudgetRow: View {
         HStack {
 
             Text(title)
+            
 
             Spacer()
 

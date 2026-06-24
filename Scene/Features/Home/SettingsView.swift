@@ -18,8 +18,9 @@ struct SettingsView: View {
         } label: {
             
             Image(systemName: "gearshape.fill")
-                .font(.system(size: 16))
-                .foregroundColor(.white)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 28, height: 28)
                 .padding()
         }
         .buttonStyle(.plain)
@@ -54,11 +55,14 @@ struct SettingsDetailView: View {
                     }
                 } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 16, weight: .medium))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 28, height: 28)
+//                        .font(.system(size: 16, weight: .medium))
                         .foregroundStyle(.white)
                         .padding(8)
-                        .background(.white.opacity(0.1))
-                        .clipShape(Circle())
+//                        .background(.white.opacity(0.1))
+//                        .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
             }
@@ -67,7 +71,7 @@ struct SettingsDetailView: View {
             VStack(alignment: .leading, spacing: 16) {
                 
                 Text("Profile")
-                    .font(.title2)
+                    .font(.title)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
                 

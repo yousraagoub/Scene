@@ -18,12 +18,13 @@ struct SidebarButton: View {
             HStack(spacing: 14) {
 
                 Image(systemName: item.systemImage)
-                    .font(.system(size: 24, weight: .semibold))
-                    
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 28, height: 28)
 
                 if !compact {
                     Text(item.title)
-                        .font(.system(size: 12,weight: .medium))
+                        .font(.title2)
                         
                 }
 
@@ -32,10 +33,8 @@ struct SidebarButton: View {
                 }
             }
             .frame(maxWidth: .infinity)
-            .foregroundStyle(isSelected ? .white : .black)
+            .foregroundStyle(isSelected ? .white : .secondary)
             .padding()
-           // .background(RoundedRectangle(cornerRadius:50)
-          //  .fill(isSelected ? Color.white : Color.clear))
         }
         .buttonStyle(.plain)
     }

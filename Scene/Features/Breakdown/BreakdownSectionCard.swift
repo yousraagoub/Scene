@@ -19,7 +19,7 @@ struct BreakdownSectionCard<Content: View>: View {
             HStack {
 
                 Label(title, systemImage: icon)
-                    .font(.headline)
+                    .font(.title)
 
                 Spacer()
             }

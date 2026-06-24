@@ -32,7 +32,7 @@ struct HomeView: View {
                                 }
                             }
                         )
-                        .frame(width: isSidebarCollapsed ? 60 : 260, height: 218)
+                        .frame(width: isSidebarCollapsed ? 60 : 290, height: 218)
                         .glassEffect(in: RoundedRectangle(cornerRadius: 30))
 
                         Spacer()
@@ -53,12 +53,6 @@ struct HomeView: View {
                     .padding(.top, 30)
                     .padding(.horizontal, 30)
 
-                    VStack {
-                        Image("sceneLogo")
-                            .padding(.top, 30)
-                            .padding(.trailing, 30)
-                        Spacer()
-                    }
                 }
             }
 
@@ -126,7 +120,9 @@ extension HomeView {
         case .projects:
             if !homeVM.projects.isEmpty {
                 HStack(spacing: 8) {
-                    Text("My Projects").foregroundColor(.white)
+                    Text("My Projects")
+                        .font(.title)
+                        .foregroundColor(.white)
                    // Spacer()
                 }
             }
@@ -139,13 +135,25 @@ extension HomeView {
                         homeVM.selectedProject = nil
                     } label: {
                         Text("My Projects")
+                            .font(.title)
                             .foregroundColor(hoverProjects ? .white : .secondary)
                     }
                     .buttonStyle(.plain)
                     .onHover { hoverProjects = $0 }
 
-                    Image(systemName: "chevron.forward").foregroundColor(.secondary)
-                    Text(project.title).foregroundColor(.white)
+                    Image(systemName: "chevron.forward")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 10)
+                        .foregroundColor(.secondary)
+                    Text(project.title)
+                        .font(.title)
+                        .foregroundColor(.white)
+                    Image(systemName: project.scriptType == .film ? "film" : "display")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 28)
+                        .foregroundColor(.secondary)
                   //  Spacer()
                 }
             }

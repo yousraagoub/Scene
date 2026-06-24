@@ -9,13 +9,14 @@ struct BreakdownView: View {
     @EnvironmentObject var settings: AppSettings
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack{
             // MARK: - Top Bar
             HStack {
                 Picker("", selection: $showBudget) {
                     Text("Breakdown").tag(false)
                     Text("Budget").tag(true)
                 }
+                .controlSize(ControlSize.large)
                 .pickerStyle(.segmented)
                 .tint(.white)
                 .frame(width: 220)
@@ -220,14 +221,15 @@ struct SectionCard<Content: View>: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 8) {
                 Image(systemName: icon)
-                    .font(.system(size: iconFontSize, weight: .semibold))
+                    .resizable()
+                    .scaledToFit()
                     .foregroundStyle(iconColor.opacity(0.85))
-                    .frame(width: iconCircleSize, height: iconCircleSize)
-                    .background(.ultraThinMaterial, in: Circle())
-                    .overlay(Circle().stroke(iconColor.opacity(0.18), lineWidth: 0.5))
+                    .frame(width: 28, height: 28)
+                    .shadow(color: iconColor.opacity(0.85), radius: 1)
+
 
                 Text(title)
-                    .font(.headline)
+                    .font(.title)
                     .foregroundStyle(.white)
                 Spacer()
             }
@@ -257,15 +259,17 @@ struct EntityDetailRow: View {
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: icon)
-                .font(.system(size: iconFontSize, weight: .semibold))
+                .resizable()
+                .scaledToFit()
                 .foregroundStyle(iconColor.opacity(0.85))
-                .frame(width: iconCircleSize, height: iconCircleSize)
+                .frame(width: 20)
                 .background(.ultraThinMaterial, in: Circle())
+                .padding()
                 .overlay(Circle().stroke(iconColor.opacity(0.18), lineWidth: 0.5))
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(name)
-                    .font(.subheadline)
+                    .font(.title2)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
             }
@@ -301,7 +305,7 @@ struct ChipGrid: View {
         FlowLayout(spacing: 6) {
             ForEach(items, id: \.self) { item in
                 Text(item)
-                    .font(.system(size: chipFontSize, weight: .medium))
+                    .font(.title2)
                     .foregroundStyle(color.opacity(0.9))
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)

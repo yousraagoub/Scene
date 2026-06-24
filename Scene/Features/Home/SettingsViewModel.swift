@@ -18,13 +18,15 @@ struct SettingsViewModel: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack{
                 Text("Settings")
+                    .font(.title)
                 Spacer()
                 Button {
                     isExpanded = false
                 } label: {
                     Image(systemName: "xmark")
-                        .font(.title3.bold())
-                        .foregroundColor(.white)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 28, height: 28)
                 }
                 .buttonStyle(.plain)
 
@@ -32,8 +34,14 @@ struct SettingsViewModel: View {
             Divider()
             HStack(spacing: 10) {
                 Image(systemName: "person.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 28, height: 28)
+                
                 Text("Name")
-                TextField("Name...", text: $tempUserName)
+                    .font(.title)
+                TextField("Name", text: $tempUserName)
+                    .font(.title)
                     .focused($isNameFieldFocused)
                     .onSubmit {
                         saveUserName()
@@ -42,23 +50,28 @@ struct SettingsViewModel: View {
                         saveUserNameWithDelay()
                     }
                 Image(systemName: "square.and.pencil")
-                Spacer()
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 28, height: 28)
                     
             }
+            .padding(.top, 20)
             .foregroundStyle(.white)
             Picker("Language", selection: $settings.language) {
 
                 Text("English").tag(AppLanguage.english)
                 Text("Arabic").tag(AppLanguage.arabic)
             }
+            .controlSize(ControlSize.large)
+            .font(.title)
             .pickerStyle(.segmented)
             .tint(.white)
-            .padding(.top, 6)
+            .padding(.top, 20)
             Spacer()
 
         }
         .padding(20)
-        .frame(width: 519, height: 200, alignment: .topLeading)
+        .frame(width: 519, height: 250, alignment: .topLeading)
         .glassEffect(in: RoundedRectangle(cornerRadius: 30))
         .onAppear {
             // Load the saved userName when the view appears

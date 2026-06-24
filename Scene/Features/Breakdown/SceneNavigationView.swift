@@ -47,6 +47,7 @@ struct SceneNavigationView: View {
 
         }
         .foregroundStyle(.white)
+        .padding(.trailing, 40)
     }
 }
 

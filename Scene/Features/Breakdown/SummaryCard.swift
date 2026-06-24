@@ -20,14 +20,17 @@ struct SummaryCard: View {
                 ZStack {
                     Circle()
                         .fill(color.opacity(0.15))
-                        .frame(width: 36, height: 36)
+                        .frame(width: 60, height: 60)
                         .glassEffect(.clear)
                     Image(systemName: icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 36, height: 36)
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(color.opacity(0.7))
                 }
                 Text(title)
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.largeTitle)
                     .foregroundStyle(.secondary)
                     .padding(.top, 2)
                 Spacer()
@@ -40,6 +43,7 @@ struct SummaryCard: View {
                 Spacer()
                 Text("\(count)")
                     .font(.system(size: 40, weight: .bold))
+                    .dynamicTypeSize(.accessibility5)
                     .foregroundStyle(.white)
             }
 

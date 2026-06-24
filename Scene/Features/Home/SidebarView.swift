@@ -20,23 +20,28 @@ struct SidebarView: View {
                 if !compact {
                     HStack{
                         Image(systemName: "archivebox.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 28, height: 28)
                         Text("\(homeVM.projects.count)")
                             
                     }
-                    .font(.system(size: 16))
-                    .foregroundColor(.secondary)
+                    .font(.title2)
+                    .foregroundColor(.primaryRed)
                     .padding(.leading, 14)
                     Spacer()
                 }
                 Button(action: onToggle) {
 
                     Image(systemName: "sidebar.left")
-                        .font(.title3)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 28, height: 28)
                         .foregroundColor(.secondary)
                 }
                 .buttonStyle(.plain)
             }
-            .padding(.bottom,20)
+            .padding([.bottom, .top],20)
 
             SidebarButton(
                 item: SidebarItem(

@@ -14,10 +14,12 @@ struct CreateProjectButtonView: View {
         VStack(spacing: 40) {
 
             Image("createImg")
-                .frame(width: 202, height: 95)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 252, height: 145)
 
             Text("Create Your Project, and Leave the rest for us.")
-                .font(.headline)
+                .font(.largeTitle)
                 .fontWeight(.medium)
                 .foregroundColor(.white)
 
@@ -28,19 +30,21 @@ struct CreateProjectButtonView: View {
                 }
 
             } label: {
-
-                Label("Create New Project",
-                      systemImage: "plus.circle.fill")
-                    .font(.system(size: 12))
-                    .padding()
-                    .frame(maxWidth: 190, maxHeight: 46)
-                    .foregroundStyle(.black)
+                Image(systemName: "plus.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 28, height: 28)
+                    .foregroundColor(.black)
+                Text("Create New Project")
+                    .font(.title)
+                    .fontWeight(.medium)
+                    .foregroundColor(.black)
             }
             .buttonStyle(.plain)
+            .padding()
             .background(.white)
             .clipShape(RoundedRectangle(cornerRadius: 50))
         }
-        .frame(width: 432, height: 284)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.bottom, 150)
     }

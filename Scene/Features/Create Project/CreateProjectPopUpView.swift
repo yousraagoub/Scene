@@ -39,27 +39,26 @@ struct CreateProjectPopUpView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 12) {
 
             // Header
             HStack {
                 Text("New Project")
-                    .font(.title.bold())
                     .foregroundColor(.white)
                 Spacer()
                 Button { isExpanded = false } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.white)
                 }
                 .buttonStyle(.plain)
             }
-
-            
+            .font(.title)
+            Divider()
             VStack(alignment: .leading, spacing: 16) {
                 // Title
                 HStack {
-                    Text("Title").foregroundColor(.white)
+                    Text("Title")
+                        .foregroundColor(.white)
                     TextField("Enter title", text: $title)
                         .textFieldStyle(.roundedBorder)
                 }
@@ -86,28 +85,30 @@ struct CreateProjectPopUpView: View {
                 }
                 .pickerStyle(.segmented)
                 .tint(.white)
+                .controlSize(ControlSize.large)
             }
-            
+            .padding(.top, 20)
+            .font(.title)
 
             HStack {
                 Spacer()
                 VStack{
+                    Text("only .docx file")
+                        .font(.title2)
+                        .foregroundColor(.gray)
                     Button {
                         withAnimation(.spring(duration: 0.25)) { importingFile = true }
                     } label: {
                         Label("Upload Script", systemImage: "plus.circle.fill")
-                            .font(.system(size: 12))
+                            .font(.title2)
                             .padding()
-                            .frame(maxWidth: 160, maxHeight: 36)
                             .foregroundStyle(.black)
                     }
                     .buttonStyle(.plain)
                     .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 50))
                     .disabled(isAnalyzing)
-                    Text("only .docx file")
-                        .font(.system(size: 10))
-                        .foregroundColor(.gray)
+                    
                     
                     
                     if let fileURL {
@@ -139,9 +140,9 @@ struct CreateProjectPopUpView: View {
                         HStack(spacing: 6) {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .foregroundColor(.red)
-                                .font(.system(size: 11))
+                                .font(.headline)
                             Text(errorMessage)
-                                .font(.system(size: 11))
+                                .font(.title3)
                                 .foregroundColor(.red)
                                 .multilineTextAlignment(.leading)
                         }
@@ -151,26 +152,26 @@ struct CreateProjectPopUpView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                     } else {Spacer()}
                 }
+                .padding(.top, 20)
                     
                 Spacer()
             }
+            .font(.title)
 
             HStack {
                 Spacer()
                 Button {
                     submitProject()
                 } label: {
-
                         Text("Submit")
+                            .font(.title2)
                 }
                 .disabled(title.isEmpty || fileURL == nil || isAnalyzing)
-                .font(.system(size: 12))
                 .padding()
-                .frame(maxWidth: 90, maxHeight: 36)
                 .foregroundStyle(.black)
                 .buttonStyle(.plain)
                 .background(title.isEmpty || fileURL == nil ? Color.gray : Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .clipShape(RoundedRectangle(cornerRadius: 50))
                 Spacer()
 
             }
@@ -181,7 +182,7 @@ struct CreateProjectPopUpView: View {
             }
         }
         .padding(20)
-        .frame(width: 520, height: 432, alignment: .topLeading)
+        .frame(width: 520, height: 540, alignment: .topLeading)
         .glassEffect(in: RoundedRectangle(cornerRadius: 30))
         .fileImporter(
             isPresented: $importingFile,

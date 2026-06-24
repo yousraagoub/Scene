@@ -13,6 +13,7 @@ struct PropRow: View {
         HStack {
 
             Text(prop.name)
+                .font(.title)
                 .foregroundStyle(.white)
 
             Spacer()

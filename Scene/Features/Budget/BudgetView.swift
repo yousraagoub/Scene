@@ -84,8 +84,8 @@ struct BudgetView: View {
                 .padding(40)
                 .frame(maxWidth: .infinity)
                 .glassEffect(in: RoundedRectangle(cornerRadius: 24))
-                //.padding()
             }
+            .frame(height: 840)
             Spacer()
 
             // MARK: - Right: Progress Summary

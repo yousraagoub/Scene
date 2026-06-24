@@ -86,13 +86,11 @@ struct OnboardingView: View {
                         
                         Text(pages[currentPage].title)
                             .font(.system(size: 42, weight: .bold))
+                            .dynamicTypeSize(.accessibility5)
                         
                         Text(pages[currentPage].subtitle)
-                            .font(.title3)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-                            .lineSpacing(4)
-                            .frame(maxWidth: 620)
+                            .font(.system(size: 42, weight: .bold))
+                            .dynamicTypeSize(.accessibility5)
                     }
                     .animation(.easeInOut(duration: 0.25), value: currentPage)
                     

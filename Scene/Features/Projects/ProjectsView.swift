@@ -14,13 +14,16 @@ struct ProjectsView: View {
                     HStack {
                         Spacer()
                         Image(systemName: "folder.badge.plus")
-                            .font(.system(size: 60))
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 60)
                             .foregroundStyle(.secondary)
                         Spacer()
                     }
                     HStack {
                         Spacer()
                         Text(settings.language == .arabic ? "لا يوجد مشاريع حتى الآن" : "No Projects Yet")
+                            .font(.largeTitle)
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.secondary)
                         Spacer()
@@ -90,7 +93,7 @@ struct FileCardView: View {
             timestampView
         }
         .padding(14)
-        .frame(width: 205, height: 115)
+        .frame(width: 305, height: 215)
         .background(cardBackground)
         .overlay(deleteButton)
         .scaleEffect(hovered ? 1.02 : 1.0)
@@ -100,7 +103,8 @@ struct FileCardView: View {
     private var headerView: some View {
         HStack(alignment: .top) {
             Text(project.title)
-                .font(.system(size: 14, weight: .semibold))
+                .font(.title)
+                .fontWeight(.bold)
                 .foregroundColor(.white)
             Spacer()
             scriptTypeIcon
@@ -109,9 +113,11 @@ struct FileCardView: View {
     
     private var scriptTypeIcon: some View {
         Image(systemName: project.scriptType == .film ? "film" : "display")
-            .font(.system(size: 13))
-            .foregroundColor(.white.opacity(0.7))
-            .padding(6)
+            .resizable()
+            .scaledToFit()
+            .frame(width: 28)
+            .foregroundColor(.secondary)
+            .padding()
             .background(Color.white.opacity(0.15))
             .clipShape(Circle())
     }
@@ -123,17 +129,17 @@ struct FileCardView: View {
                     for: settings.language
                 )
             )
-                .font(.system(size: 10))
+                .font(.title)
                 .foregroundColor(.secondary)
             Text("•")
-                .font(.system(size: 10))
+                .font(.title)
                 .foregroundColor(.secondary)
             Text(
                 project.scriptType.localized(
                     for: settings.language
                 )
             )
-            .font(.system(size: 10))
+            .font(.title)
             .foregroundColor(.secondary)
         }
     }
@@ -141,6 +147,9 @@ struct FileCardView: View {
     private var timestampView: some View {
         HStack {
             Image(systemName: "clock")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20)
                 .font(.system(size: 9))
                 .foregroundColor(.secondary)
             Text(
@@ -148,7 +157,7 @@ struct FileCardView: View {
                     for: settings.language
                 )
             )
-                .font(.system(size: 10))
+                .font(.title2)
                 .foregroundColor(.secondary)
             Spacer()
         }
@@ -171,8 +180,11 @@ struct FileCardView: View {
     private var deleteButton: some View {
         Button(action: { showDeleteAlert = true }) {
             Image(systemName: "trash")
-                .font(.system(size: 11, weight: .medium))
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20)
                 .foregroundColor(Color.primaryRed)
+                .padding()
         }
         .buttonStyle(.plain)
         .opacity(hovered ? 1 : 0)
