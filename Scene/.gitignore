@@ -5,6 +5,7 @@ DerivedData/
 # User-specific Xcode files
 *.xcuserstate
 xcuserdata/
+../Scene.xcodeproj/project.pbxproj
 
 # Swift Package Manager
 .swiftpm/
@@ -17,6 +18,7 @@ xcuserdata/
 .env
 Secrets.swift
 Config.swift
+Secret/Config.xcconfig
 
 # Fastlane (if used)
 fastlane/report.xml
