@@ -414,7 +414,6 @@
 //        }
 //    }
 //}
-
 import SwiftUI
 import UniformTypeIdentifiers
 import CloudKit
@@ -449,15 +448,17 @@ struct CreateProjectPopUpView: View {
             "Family","Musical","Animation"
           ]
     }
+
     var body: some View {
         let isArabic = settings.language == .arabic
+
         ZStack(alignment: isArabic ? .bottomTrailing : .bottomLeading) {
-       // ZStack(alignment: isArabic ? .bottomLeading : .bottomTrailing) {
 
             VStack(alignment: .leading, spacing: 0) {
 
+                // ── Header ───────────────────────────────────────────────
                 HStack {
-                    Text(isArabic ? "ملف جديد" : "New Project")
+                    Text(isArabic ? "مشروع جديد" : "New Project")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
@@ -471,6 +472,7 @@ struct CreateProjectPopUpView: View {
                 }
                 .padding(.bottom, 24)
 
+                // ── Title row ────────────────────────────────────────────
                 HStack(spacing: 16) {
                     Text(isArabic ? "العنوان" : "Title")
                         .font(.title2)
@@ -490,6 +492,7 @@ struct CreateProjectPopUpView: View {
                 }
                 .padding(.bottom, 20)
 
+                // ── Category + Production Type row ───────────────────────
                 HStack(alignment: .top, spacing: 20) {
 
                     // Left: Genre dropdown
@@ -554,10 +557,9 @@ struct CreateProjectPopUpView: View {
                 }
                 .padding(.bottom, 20)
 
+                // ── Script upload area ───────────────────────────────────
                 VStack(alignment: isArabic ? .trailing : .leading, spacing: 10) {
-               // VStack(alignment: isArabic ? .leading : .trailing, spacing: 10) {
 
-                    // Upload button — left in English, right in Arabic
                     Button {
                         withAnimation(.spring(duration: 0.25)) { importingFile = true }
                     } label: {
@@ -624,14 +626,15 @@ struct CreateProjectPopUpView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 50))
                     }
                 }
-                //.frame(maxWidth: .infinity, alignment: isArabic ? .trailing : .leading)
-                .frame(maxWidth: .infinity, alignment: isArabic ? .leading : .trailing)
+                // Fixed width = 520 - 28 padding left - 28 padding right = 464
+              //  .frame(width: 464, alignment: isArabic ? .trailing : .leading)
+                .frame(width: 464, alignment: isArabic ? .leading : .trailing)
 
                 Spacer()
             }
             .padding(28)
 
-            // Submit checkmark button
+            // ── Submit checkmark button ──────────────────────────────────
             let scriptUploaded = fileURL != nil && !isAnalyzing
             let canSubmit = !title.isEmpty && scriptUploaded
             Button {
@@ -676,7 +679,6 @@ struct CreateProjectPopUpView: View {
             }
         }
     }
-
 
     // MARK: - Submit
 
@@ -738,6 +740,8 @@ struct CreateProjectPopUpView: View {
             }
         }
     }
+
+    // MARK: - Helpers
 
     private func setStep(_ step: AnalysisStep) {
         Task { @MainActor in analysisStep = step }
@@ -833,6 +837,9 @@ struct CreateProjectPopUpView: View {
         return "Something went wrong: \(error.localizedDescription)"
     }
 }
+
+// MARK: - Analysis Step
+
 private enum AnalysisStep {
     case idle, extracting, savingProject, analyzing, saving
 
@@ -866,3 +873,4 @@ private enum ProjectSubmissionError: LocalizedError {
         }
     }
 }
+

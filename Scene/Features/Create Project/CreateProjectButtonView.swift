@@ -18,7 +18,7 @@ struct CreateProjectButtonView: View {
                 .scaledToFit()
                 .frame(width: 252, height: 145)
 
-            Text("Create Your Project, and Leave the rest for us.")
+            Text("Create Your Project")
                 .font(.largeTitle)
                 .fontWeight(.medium)
                 .foregroundColor(.white)
